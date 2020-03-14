@@ -1,19 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/text_notifications"
+    <LinearLayout
+        android:id="@+id/profile_buttons_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
+        android:divider="@drawable/empty_divider"
+        android:orientation="vertical"
+        android:showDividers="middle"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_settings_text"
+        app:layout_constraintVertical_bias="0.377">
+
+        <Button
+            android:id="@+id/profile_change_profile_info_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_confirm_button"
+            android:text="@string/change_profile_info"
+            android:textColor="@android:color/primary_text_dark" />
+
+        <Button
+            android:id="@+id/profile_setting_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_confirm_button"
+            android:text="@string/settings"
+            android:textColor="@android:color/primary_text_dark" />
+
+        <Button
+            android:id="@+id/profile_rate_us_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_confirm_button"
+            android:text="@string/rate_us"
+            android:textColor="@android:color/primary_text_dark" />
+
+        <Button
+            android:id="@+id/profile_licence_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_confirm_button"
+            android:text="@string/licence"
+            android:textColor="@android:color/primary_text_dark" />
+
+        <Button
+            android:id="@+id/profile_about_us_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_confirm_button"
+            android:text="@string/about"
+            android:textColor="@android:color/primary_text_dark" />
+
+        <Button
+            android:id="@+id/profile_log_out_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_confirm_button"
+            android:text="@string/log_out"
+            android:textColor="@android:color/primary_text_dark" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/profile_settings_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.109"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_username_text"
+        app:layout_constraintVertical_bias="0.087" />
+
+    <TextView
+        android:id="@+id/profile_username_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/username"
+        android:textColor="@color/colorAccent"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.085" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
