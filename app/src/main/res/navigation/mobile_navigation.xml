@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/logInFragment">
+
+    <fragment
+        android:id="@+id/navigation_loyalty_cards"
+        android:name="com.lgorczynski.shopassist.ui.loyalty_cards.LoyaltyCardsFragment"
+        android:label="@string/title_loyalty_cards"
+        tools:layout="@layout/fragment_loyalty_cards" />
+
+    <fragment
+        android:id="@+id/navigation_receipts"
+        android:name="com.lgorczynski.shopassist.ui.receipts.ReceiptsFragment"
+        android:label="@string/title_receipts"
+        tools:layout="@layout/fragment_receipts" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.lgorczynski.shopassist.ui.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/logInFragment"
+        android:name="com.lgorczynski.shopassist.ui.log_in.LogInFragment"
+        android:label="@string/title_log_in"
+        tools:layout="@layout/fragment_log_in" >
+        <action
+            android:id="@+id/action_logInFragment_to_registerFragment"
+            app:destination="@id/registerFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_logInFragment_to_navigation_home"
+            app:destination="@id/navigation_loyalty_cards"
+            app:popUpTo="@+id/mobile_navigation"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.lgorczynski.shopassist.ui.register.RegisterFragment"
+        android:label="@string/register"
+        tools:layout="@layout/fragment_register" />
+</navigation>

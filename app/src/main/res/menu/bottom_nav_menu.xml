@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_loyalty_cards"
+        android:icon="@drawable/ic_card_membership_black_24dp"
+        android:title="@string/title_loyalty_cards" />
+
+    <item
+        android:id="@+id/navigation_receipts"
+        android:icon="@drawable/ic_receipt_black_24dp"
+        android:title="@string/title_receipts" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_account_circle_black_24dp"
+        android:title="@string/title_profile" />
+
+</menu>
