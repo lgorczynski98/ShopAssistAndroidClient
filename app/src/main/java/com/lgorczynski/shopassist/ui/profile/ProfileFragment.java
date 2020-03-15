@@ -35,7 +35,15 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         navController = Navigation.findNavController(view);
 
         final Button logOutButton = view.findViewById(R.id.profile_log_out_button);
+        final Button settingButton = view.findViewById(R.id.profile_setting_button);
+        final Button profileInfoButton = view.findViewById(R.id.profile_change_profile_info_button);
+        final Button licenceButton = view.findViewById(R.id.profile_licence_button);
+        final Button aboutButton = view.findViewById(R.id.profile_about_us_button);
         logOutButton.setOnClickListener(this);
+        settingButton.setOnClickListener(this);
+        profileInfoButton.setOnClickListener(this);
+        licenceButton.setOnClickListener(this);
+        aboutButton.setOnClickListener(this);
     }
 
     @Override
@@ -43,6 +51,23 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         switch (view.getId()){
             case R.id.profile_log_out_button:{
                 navController.navigate(R.id.action_navigation_profile_to_logInFragment);
+                break;
+            }
+            case R.id.profile_setting_button:{
+                navController.navigate(R.id.action_navigation_profile_to_settingsFragment);
+                break;
+            }
+            case R.id.profile_change_profile_info_button:{
+                navController.navigate(R.id.action_navigation_profile_to_profileInfoFragment);
+                break;
+            }
+            case R.id.profile_licence_button:{
+                navController.navigate(R.id.action_navigation_profile_to_licenceFragment);
+                break;
+            }
+            case R.id.profile_about_us_button:{
+                navController.navigate(R.id.action_navigation_profile_to_aboutFragment);
+                break;
             }
         }
     }
