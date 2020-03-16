@@ -7,6 +7,13 @@ public class Receipt {
     private String imageUrl;
     private float price;
 
+    public Receipt(String title, String purchaseDate, String imageUrl, float price) {
+        this.title = title;
+        this.purchaseDate = purchaseDate;
+        this.imageUrl = imageUrl;
+        this.price = price;
+    }
+
     public String getTitle() {
         return title;
     }
