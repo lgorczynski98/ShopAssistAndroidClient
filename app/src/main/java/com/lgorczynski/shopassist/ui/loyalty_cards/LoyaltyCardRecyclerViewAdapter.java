@@ -13,9 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.lgorczynski.shopassist.LoyaltyCard;
 import com.lgorczynski.shopassist.R;
-import com.lgorczynski.shopassist.ui.receipts.ReceiptRecyclerViewAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

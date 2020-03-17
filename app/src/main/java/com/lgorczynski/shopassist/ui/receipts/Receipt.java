@@ -1,4 +1,4 @@
-package com.lgorczynski.shopassist;
+package com.lgorczynski.shopassist.ui.receipts;
 
 public class Receipt {
 

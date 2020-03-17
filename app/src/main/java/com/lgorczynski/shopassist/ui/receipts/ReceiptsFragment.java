@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lgorczynski.shopassist.R;
-import com.lgorczynski.shopassist.Receipt;
 
 import java.util.List;
 
