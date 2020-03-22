@@ -9,10 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -33,7 +30,7 @@ public class LoyaltyCardFormFragment extends Fragment {
         BarcodeFormat format = BarcodeFormat.valueOf(getArguments().getString("format"));
         BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
         try {
-            Bitmap bitmap = barcodeEncoder.encodeBitmap(content, format, 400, 400);
+            Bitmap bitmap = barcodeEncoder.encodeBitmap(content, format, 800, 400);
             barcodeImage.setImageBitmap(bitmap);
         }
         catch(Exception e) {

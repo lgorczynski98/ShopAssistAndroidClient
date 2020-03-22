@@ -1,10 +1,13 @@
 package com.lgorczynski.shopassist.ui.loyalty_cards;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,23 +21,25 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.CaptureActivityPortrait;
 
 import java.util.List;
 
-public class LoyaltyCardsFragment extends Fragment {
+public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecyclerViewAdapter.OnCardClickListener {
+
+    private static final String TAG = "LoyaltyCardsFragment";
 
     private LoyaltyCardsViewModel loyaltyCardsViewModel;
 
     private RecyclerView recyclerView;
     private LoyaltyCardRecyclerViewAdapter adapter;
-
-    private FloatingActionButton fab;
 
     private NavController navController;
 
@@ -56,14 +61,14 @@ public class LoyaltyCardsFragment extends Fragment {
         loyaltyCardsViewModel.getLoyaltyCards().observe(this, new Observer<List<LoyaltyCard>>() {
             @Override
             public void onChanged(List<LoyaltyCard> loyaltyCards) {
-                adapter = new LoyaltyCardRecyclerViewAdapter(getContext(), loyaltyCards);
+                adapter = new LoyaltyCardRecyclerViewAdapter(getContext(), loyaltyCards, LoyaltyCardsFragment.this);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setAdapter(adapter);
             }
         });
 
         //skanowanie kodow
-        fab = root.findViewById(R.id.loyalty_cards_fab);
+        FloatingActionButton fab = root.findViewById(R.id.loyalty_cards_fab);
         fab.setOnClickListener(v -> startScanning());
 
         return root;
@@ -102,5 +107,26 @@ public class LoyaltyCardsFragment extends Fragment {
 
             Toast.makeText(getContext(), toast, Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onCardClick(int position) {
+//        Toast.makeText(getContext(), "Click on item: " + adapter.getItemOnPosition(position).getTitle(), Toast.LENGTH_SHORT).show();
+        LoyaltyCard card = adapter.getItemOnPosition(position);
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+        bottomSheetDialog.setContentView(R.layout.loyalty_cards_bottom_sheet_dialog);
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
+        final ImageView barcodeImage = bottomSheetDialog.findViewById(R.id.loyalty_cards_bottom_sheet_dialog_image);
+        final TextView contentText = bottomSheetDialog.findViewById(R.id.loyalty_cards_bottom_sheet_dialog_content_text);
+        contentText.setText(card.getContent());
+        BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+        try {
+            Bitmap bitmap = barcodeEncoder.encodeBitmap(card.getContent(), BarcodeFormat.valueOf(card.getFormat()), 800, 400);
+            barcodeImage.setImageBitmap(bitmap);
+        }
+        catch(Exception e) {
+            Log.d(TAG, "onCardClick: Failed while generating barcode");
+        }
+        bottomSheetDialog.show();
     }
 }

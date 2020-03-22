@@ -19,7 +19,11 @@
         android:id="@+id/navigation_receipts"
         android:name="com.lgorczynski.shopassist.ui.receipts.ReceiptsFragment"
         android:label="@string/title_receipts"
-        tools:layout="@layout/fragment_receipts" />
+        tools:layout="@layout/fragment_receipts" >
+        <action
+            android:id="@+id/action_navigation_receipts_to_receiptFormFragment"
+            app:destination="@id/receiptFormFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"
@@ -110,4 +114,9 @@
         android:name="com.lgorczynski.shopassist.ui.loyalty_cards.LoyaltyCardFormFragment"
         android:label="fragment_loyalty_card_form"
         tools:layout="@layout/fragment_loyalty_card_form" />
+    <fragment
+        android:id="@+id/receiptFormFragment"
+        android:name="com.lgorczynski.shopassist.ui.receipts.ReceiptFormFragment"
+        android:label="fragment_receipt_form"
+        tools:layout="@layout/fragment_receipt_form" />
 </navigation>

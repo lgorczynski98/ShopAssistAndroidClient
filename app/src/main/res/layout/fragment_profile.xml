@@ -17,55 +17,82 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_settings_text"
-        app:layout_constraintVertical_bias="0.377">
+        app:layout_constraintVertical_bias="0.2">
 
-        <Button
-            android:id="@+id/profile_change_profile_info_button"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_confirm_button"
-            android:text="@string/change_profile_info"
-            android:textColor="@android:color/primary_text_dark" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-        <Button
-            android:id="@+id/profile_setting_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_confirm_button"
-            android:text="@string/settings"
-            android:textColor="@android:color/primary_text_dark" />
+            <Button
+                android:id="@+id/profile_change_profile_info_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_confirm_button"
+                android:text="@string/change_profile_info"
+                android:textColor="@android:color/primary_text_dark" />
 
-        <Button
-            android:id="@+id/profile_rate_us_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_confirm_button"
-            android:text="@string/rate_us"
-            android:textColor="@android:color/primary_text_dark" />
+            <Button
+                android:id="@+id/profile_setting_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_confirm_button"
+                android:text="@string/settings"
+                android:textColor="@android:color/primary_text_dark" />
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/profile_licence_button"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_confirm_button"
-            android:text="@string/licence"
-            android:textColor="@android:color/primary_text_dark" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-        <Button
-            android:id="@+id/profile_about_us_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_confirm_button"
-            android:text="@string/about"
-            android:textColor="@android:color/primary_text_dark" />
+            <Button
+                android:id="@+id/profile_rate_us_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_confirm_button"
+                android:text="@string/rate_us"
+                android:textColor="@android:color/primary_text_dark" />
 
-        <Button
-            android:id="@+id/profile_log_out_button"
+            <Button
+                android:id="@+id/profile_licence_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_confirm_button"
+                android:text="@string/licence"
+                android:textColor="@android:color/primary_text_dark" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_confirm_button"
-            android:text="@string/log_out"
-            android:textColor="@android:color/primary_text_dark" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/profile_log_out_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_confirm_button"
+                android:text="@string/log_out"
+                android:textColor="@android:color/primary_text_dark" />
+
+            <Button
+                android:id="@+id/profile_about_us_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_confirm_button"
+                android:text="@string/about"
+                android:textColor="@android:color/primary_text_dark" />
+        </LinearLayout>
 
     </LinearLayout>
 

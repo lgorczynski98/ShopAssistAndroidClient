@@ -13,9 +13,14 @@
     <string name="password2">Confirm Password</string>
     <string name="dont_have_an_account">Don\'t have an account yet? Create one!</string>
     <string name="settings">Settings</string>
-    <string name="change_profile_info">Change profile\'s information</string>
+    <string name="change_profile_info">Profile\'s info</string>
     <string name="rate_us">Rate us</string>
     <string name="about">About us</string>
     <string name="licence">Licence</string>
     <string name="log_out">Log out</string>
+    <string name="loyalty_cards_bottom_sheet_dialog_scan_card">You can scan your loyalty card now</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="loyalty_card_title">Loyalty card title</string>
+    <string name="submit">Submit</string>
 </resources>

@@ -24,17 +24,19 @@ public class LoyaltyCardRecyclerViewAdapter extends RecyclerView.Adapter<Loyalty
 
     private List<LoyaltyCard> mLoyaltyCards;
     private Context mContext;
+    private OnCardClickListener mOnCardClickListener;
 
-    public LoyaltyCardRecyclerViewAdapter(Context mContext, List<LoyaltyCard> mLoyaltyCards) {
+    public LoyaltyCardRecyclerViewAdapter(Context mContext, List<LoyaltyCard> mLoyaltyCards, OnCardClickListener onCardClickListener) {
         this.mLoyaltyCards = mLoyaltyCards;
         this.mContext = mContext;
+        this.mOnCardClickListener = onCardClickListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.loyalty_card_list_item_layout, parent, false);
-        ViewHolder holder = new LoyaltyCardRecyclerViewAdapter.ViewHolder(view);
+        ViewHolder holder = new LoyaltyCardRecyclerViewAdapter.ViewHolder(view, mOnCardClickListener);
         return holder;
     }
 
@@ -45,12 +47,6 @@ public class LoyaltyCardRecyclerViewAdapter extends RecyclerView.Adapter<Loyalty
         final LoyaltyCard loyaltyCard = mLoyaltyCards.get(position);
         Picasso.get().load(loyaltyCard.getImageUrl()).into(holder.image);
         holder.title.setText(loyaltyCard.getTitle());
-        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(mContext, "Clicked on: " + loyaltyCard.getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
@@ -58,18 +54,34 @@ public class LoyaltyCardRecyclerViewAdapter extends RecyclerView.Adapter<Loyalty
         return mLoyaltyCards.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public LoyaltyCard getItemOnPosition(int position){
+        return mLoyaltyCards.get(position);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView image;
         TextView title;
         ConstraintLayout parentLayout;
+        OnCardClickListener onCardClickListener;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, OnCardClickListener onCardClickListener) {
             super(itemView);
 
             image = itemView.findViewById(R.id.loyalty_card_list_image);
             title = itemView.findViewById(R.id.loyalty_card_list_title);
             parentLayout = itemView.findViewById(R.id.loyalty_card_parent_layout);
+            this.onCardClickListener = onCardClickListener;
+            parentLayout.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view) {
+            onCardClickListener.onCardClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnCardClickListener{
+        void onCardClick(int position);
     }
 }
