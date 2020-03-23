@@ -1,12 +1,15 @@
 package com.lgorczynski.shopassist.ui.loyalty_cards;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -112,10 +115,21 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
     @Override
     public void onCardClick(int position) {
 //        Toast.makeText(getContext(), "Click on item: " + adapter.getItemOnPosition(position).getTitle(), Toast.LENGTH_SHORT).show();
+        WindowManager.LayoutParams windowParams = getActivity().getWindow().getAttributes();
+        final float brightness = windowParams.screenBrightness;
+        windowParams.screenBrightness = 1.0f;
+        getActivity().getWindow().setAttributes(windowParams);
         LoyaltyCard card = adapter.getItemOnPosition(position);
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
         bottomSheetDialog.setContentView(R.layout.loyalty_cards_bottom_sheet_dialog);
         bottomSheetDialog.setCanceledOnTouchOutside(true);
+        bottomSheetDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                windowParams.screenBrightness = brightness;
+                getActivity().getWindow().setAttributes(windowParams);
+            }
+        });
         final ImageView barcodeImage = bottomSheetDialog.findViewById(R.id.loyalty_cards_bottom_sheet_dialog_image);
         final TextView contentText = bottomSheetDialog.findViewById(R.id.loyalty_cards_bottom_sheet_dialog_content_text);
         contentText.setText(card.getContent());
