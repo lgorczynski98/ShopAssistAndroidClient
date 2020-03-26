@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:paddingBottom="24dp">
+
+
+    <TextView
+        android:id="@+id/loyalty_cards_settings_bottom_sheet_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="TextView"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:id="@+id/loyalty_cards_settings_bottom_sheet_dialog_share_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/layout_with_borders"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/loyalty_cards_settings_bottom_sheet_dialog_share_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            app:srcCompat="@drawable/ic_share_black_24dp" />
+
+        <TextView
+            android:id="@+id/loyalty_cards_settings_bottom_sheet_dialog_share_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/share"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/loyalty_cards_settings_bottom_sheet_dialog_edit_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/layout_with_borders"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/loyalty_cards_settings_bottom_sheet_dialog_edit_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            app:srcCompat="@drawable/ic_edit_black_24dp" />
+
+        <TextView
+            android:id="@+id/loyalty_cards_settings_bottom_sheet_dialog_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/edit"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/loyalty_cards_settings_bottom_sheet_dialog_delete_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/layout_with_borders"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/loyalty_cards_settings_bottom_sheet_dialog_delete_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            app:srcCompat="@drawable/ic_edit_black_24dp" />
+
+        <TextView
+            android:id="@+id/loyalty_cards_settings_bottom_sheet_dialog_delete_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/delete"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</LinearLayout>

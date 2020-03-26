@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +37,7 @@ import com.lgorczynski.shopassist.CaptureActivityPortrait;
 
 import java.util.List;
 
-public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecyclerViewAdapter.OnCardClickListener {
+public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecyclerViewAdapter.OnCardClickListener, View.OnClickListener{
 
     private static final String TAG = "LoyaltyCardsFragment";
 
@@ -142,5 +144,50 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
             Log.d(TAG, "onCardClick: Failed while generating barcode");
         }
         bottomSheetDialog.show();
+    }
+
+    @Override
+    public void onSettingClick(int position) {
+        LoyaltyCard card = adapter.getItemOnPosition(position);
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+        bottomSheetDialog.setContentView(R.layout.loyalty_cards_settings_bottom_sheet_dialog);
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
+
+        final TextView title = bottomSheetDialog.findViewById(R.id.loyalty_cards_settings_bottom_sheet_dialog_title);
+        title.setText(card.getTitle());
+
+        final LinearLayout share = bottomSheetDialog.findViewById(R.id.loyalty_cards_settings_bottom_sheet_dialog_share_layout);
+        final LinearLayout edit = bottomSheetDialog.findViewById(R.id.loyalty_cards_settings_bottom_sheet_dialog_edit_layout);
+        final LinearLayout delete = bottomSheetDialog.findViewById(R.id.loyalty_cards_settings_bottom_sheet_dialog_delete_layout);
+
+        share.setOnClickListener(this);
+        edit.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("content", card.getContent());
+            bundle.putString("format", card.getFormat());
+            bundle.putString("title", card.getTitle());
+            bundle.putString("imageUrl", card.getImageUrl());
+            navController.navigate(R.id.action_navigation_loyalty_cards_to_loyaltyCardEditFormFragment, bundle);
+            bottomSheetDialog.cancel();
+        });
+        delete.setOnClickListener(this);
+
+        bottomSheetDialog.show();
+    }
+
+    //setting buttons
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()){
+            case R.id.loyalty_cards_settings_bottom_sheet_dialog_share_layout:{
+                Toast.makeText(getContext(), "Clicked on share", Toast.LENGTH_SHORT).show();
+
+                break;
+            }
+            case R.id.loyalty_cards_settings_bottom_sheet_dialog_delete_layout:{
+                Toast.makeText(getContext(), "Clicked on delete", Toast.LENGTH_SHORT).show();
+                break;
+            }
+        }
     }
 }

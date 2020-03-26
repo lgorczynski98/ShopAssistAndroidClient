@@ -13,6 +13,13 @@
         <action
             android:id="@+id/action_navigation_loyalty_cards_to_loyaltyCardFormFragment"
             app:destination="@id/loyaltyCardFormFragment" />
+        <action
+            android:id="@+id/action_navigation_loyalty_cards_to_loyaltyCardEditFormFragment"
+            app:destination="@id/loyaltyCardEditFormFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
 
     <fragment
@@ -119,4 +126,8 @@
         android:name="com.lgorczynski.shopassist.ui.receipts.ReceiptFormFragment"
         android:label="fragment_receipt_form"
         tools:layout="@layout/fragment_receipt_form" />
+    <fragment
+        android:id="@+id/loyaltyCardEditFormFragment"
+        android:name="com.lgorczynski.shopassist.ui.loyalty_cards.LoyaltyCardEditFormFragment"
+        android:label="LoyaltyCardEditFormFragment" />
 </navigation>

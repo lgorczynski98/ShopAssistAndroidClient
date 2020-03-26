@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +63,7 @@ public class LoyaltyCardRecyclerViewAdapter extends RecyclerView.Adapter<Loyalty
 
         ImageView image;
         TextView title;
+        Button setting;
         ConstraintLayout parentLayout;
         OnCardClickListener onCardClickListener;
 
@@ -70,18 +72,30 @@ public class LoyaltyCardRecyclerViewAdapter extends RecyclerView.Adapter<Loyalty
 
             image = itemView.findViewById(R.id.loyalty_card_list_image);
             title = itemView.findViewById(R.id.loyalty_card_list_title);
+            setting = itemView.findViewById(R.id.loyalty_card_list_setting_button);
             parentLayout = itemView.findViewById(R.id.loyalty_card_parent_layout);
             this.onCardClickListener = onCardClickListener;
             parentLayout.setOnClickListener(this);
+            setting.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            onCardClickListener.onCardClick(getAdapterPosition());
+            switch(view.getId()){
+                case R.id.loyalty_card_parent_layout:{
+                    onCardClickListener.onCardClick(getAdapterPosition());
+                    break;
+                }
+                case R.id.loyalty_card_list_setting_button:{
+                    onCardClickListener.onSettingClick(getAdapterPosition());
+                    break;
+                }
+            }
         }
     }
 
     public interface OnCardClickListener{
         void onCardClick(int position);
+        void onSettingClick(int position);
     }
 }
