@@ -80,7 +80,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.2"
-            app:srcCompat="@drawable/ic_edit_black_24dp" />
+            app:srcCompat="@drawable/ic_delete_black_24dp" />
 
         <TextView
             android:id="@+id/loyalty_cards_settings_bottom_sheet_dialog_delete_text"
