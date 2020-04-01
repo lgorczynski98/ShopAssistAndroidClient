@@ -1,5 +1,6 @@
 package com.lgorczynski.shopassist.ui.receipts;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lgorczynski.shopassist.R;
+import com.lgorczynski.shopassist.ReceiptScannerActivity;
 
 import java.util.List;
 
@@ -71,5 +73,7 @@ public class ReceiptsFragment extends Fragment {
 
     private void startScanningReceipt(){
         Toast.makeText(getContext(), "Clicked on receipt fragment", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), ReceiptScannerActivity.class);
+        startActivity(intent);
     }
 }
