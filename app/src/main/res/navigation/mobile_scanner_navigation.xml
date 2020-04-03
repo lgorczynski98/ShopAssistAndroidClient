@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_scanner_navigation"
+    app:startDestination="@id/receiptScannerCameraFragment">
+
+    <fragment
+        android:id="@+id/receiptScannerCameraFragment"
+        android:name="com.lgorczynski.shopassist.ui.receipt_scanner.ReceiptScannerCameraFragment"
+        android:label="fragment_receipt_scanner_camera"
+        tools:layout="@layout/fragment_receipt_scanner_camera" >
+        <action
+            android:id="@+id/action_receiptScannerCameraFragment_to_receiptScannerImagePreviewFragment"
+            app:destination="@id/receiptScannerImagePreviewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/receiptScannerImagePreviewFragment"
+        android:name="com.lgorczynski.shopassist.ui.receipt_scanner.ReceiptScannerImagePreviewFragment"
+        android:label="fragment_receipt_scanner_preview"
+        tools:layout="@layout/fragment_receipt_scanner_preview" />
+</navigation>
