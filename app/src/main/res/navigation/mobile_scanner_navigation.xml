@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/receiptScannerCameraFragment"
-        android:name="com.lgorczynski.shopassist.ui.receipt_scanner.ReceiptScannerCameraFragment"
+        android:name="com.lgorczynski.shopassist.ui.receipt_scanner.ReceiptScannerFotoapparat"
         android:label="fragment_receipt_scanner_camera"
-        tools:layout="@layout/fragment_receipt_scanner_camera" >
+        tools:layout="@layout/fragment_receipt_scanner_camera">
         <action
             android:id="@+id/action_receiptScannerCameraFragment_to_receiptScannerImagePreviewFragment"
             app:destination="@id/receiptScannerImagePreviewFragment" />

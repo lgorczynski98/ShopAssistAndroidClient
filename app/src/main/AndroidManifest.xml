@@ -51,7 +51,6 @@
         <activity
             android:name=".ReceiptScannerActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
-            android:screenOrientation="landscape"
             android:configChanges="keyboardHidden|orientation">
         </activity>
         <provider

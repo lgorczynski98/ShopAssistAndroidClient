@@ -23,6 +23,7 @@ import com.lgorczynski.shopassist.ui.receipts.ReceiptsViewModel;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.JavaCamera2View;
 import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
@@ -47,13 +48,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.fotoapparat.preview.Frame;
+import io.fotoapparat.preview.FrameProcessor;
+
 public class ReceiptScannerCameraFragment extends Fragment implements CameraBridgeViewBase.CvCameraViewListener2 {
 
     private static final String TAG = "ReceiptScannerCameraFra";
     private NavController navController;
 
     private ImageButton captureButton;
-    private JavaCameraView javaCameraView;
+    private JavaCamera2View javaCameraView;
     private Mat mRGBA;
     private Mat origin;
     private Mat imgGray;
@@ -75,14 +79,14 @@ public class ReceiptScannerCameraFragment extends Fragment implements CameraBrid
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_receipt_scanner_camera, container, false);
-        captureButton = root.findViewById(R.id.receipt_scanner_capture_button);
+//        captureButton = root.findViewById(R.id.receipt_scanner_capture_button);
 //        captureButton.setOnClickListener(view -> navController.navigate(R.id.action_receiptScannerCameraFragment_to_receiptScannerImagePreviewFragment));
         captureButton.setOnClickListener(view -> cropToPoints(points));
 
-        javaCameraView = root.findViewById(R.id.java_camera_view);
+//        javaCameraView = root.findViewById(R.id.java_camera_view);
         javaCameraView.setVisibility(SurfaceView.VISIBLE);
         javaCameraView.setCvCameraViewListener(this);
-        javaCameraView.setMaxFrameSize(1440, 2560);
+//        javaCameraView.setMaxFrameSize(1920, 1080);
         return root;
     }
 
@@ -153,6 +157,8 @@ public class ReceiptScannerCameraFragment extends Fragment implements CameraBrid
             matOfPoint.fromList(points);
             matOfPoints.add(matOfPoint);
             Imgproc.drawContours(mRGBA, matOfPoints, -1, new Scalar(0, 255, 0, 128), 4);
+//            Imgproc.drawMarker(mRGBA, new Point(10, 10), new Scalar(255, 0, 0), 0, 50);
+//            Imgproc.drawMarker(mRGBA, new Point(10, 200), new Scalar(255, 0, 0), 0, 50);
         }
         catch(Exception e) {
             Log.d(TAG, "onCameraFrame: Strange exception on drawing contours");
@@ -206,7 +212,7 @@ public class ReceiptScannerCameraFragment extends Fragment implements CameraBrid
     private MatOfPoint getRect(Mat img){
         Imgproc.cvtColor(img, imgGray, Imgproc.COLOR_BGR2GRAY, 4);
         Imgproc.blur(imgGray, imgGray, new Size(3, 3));
-        Core.normalize(imgGray, imgGray, 0, 255, Core.NORM_MINMAX);
+//        Core.normalize(imgGray, imgGray, 0, 255, Core.NORM_MINMAX);
         Imgproc.threshold(imgGray,imgGray, 150,255,Imgproc.THRESH_TRUNC);
         Core.normalize(imgGray, imgGray, 0, 255, Core.NORM_MINMAX);
         Imgproc.Canny(imgGray, imgCanny, 185, 85);
@@ -237,8 +243,8 @@ public class ReceiptScannerCameraFragment extends Fragment implements CameraBrid
         double left = Math.sqrt(Math.pow(corners.get(3).x -
                 corners.get(1).x, 2) + Math.pow(corners.get(3).y -
                 corners.get(1).y, 2));
-        Mat quad = Mat.zeros(new Size(Math.max(left, right),
-                Math.max(top, bottom)), CvType.CV_8UC3);
+        Mat quad = Mat.zeros(new Size(Math.max(top, bottom),
+                Math.max(left, right)), CvType.CV_8UC3);
 
         ArrayList<Point> result_pts = new ArrayList<>();
         result_pts.add(new Point(quad.cols(), 0));
