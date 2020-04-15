@@ -41,6 +41,7 @@ import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.core.TermCriteria;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.utils.Converters;
@@ -189,16 +190,6 @@ public class ReceiptScannerFotoapparat extends Fragment {
     private void takePicture() {
         PhotoResult photoResult = fotoapparat.takePicture();
 
-        File file;
-        try {
-            file = createImageFile();
-        }
-        catch(IOException e) {
-            Log.d(TAG, "takePicture: Exception while creating image file");
-            return;
-        }
-
-        photoResult.saveToFile(file);
         photoResult
                 .toBitmap()
                 .whenDone(new WhenDoneListener<BitmapPhoto>() {
@@ -209,14 +200,16 @@ public class ReceiptScannerFotoapparat extends Fragment {
                             return;
                         }
 
-                        Mat mat = Imgcodecs.imread(file.getAbsolutePath());
+                        Mat mat = new Mat();
+                        Bitmap bmp32 = bitmapPhoto.bitmap.copy(Bitmap.Config.ARGB_8888, true);
+                        Utils.bitmapToMat(bmp32, mat);
                         List<Point> points = frameProcessor.getRect(mat).toList();
                         Bitmap croppedBitmap = frameProcessor.cropToPoints(points, mat);
                         mat.release();
                         try {
                             File croppedImageFile = createImageFile();
                             FileOutputStream outputStream = new FileOutputStream(croppedImageFile);
-                            croppedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                            croppedBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                             outputStream.close();
 
                             Bundle bundle = new Bundle();
@@ -244,7 +237,6 @@ public class ReceiptScannerFotoapparat extends Fragment {
 
         private List<Point> points;
         private Mat morph_kernel = new Mat(new Size(10, 10), CvType.CV_8UC1, new Scalar(255));
-        private static final int SCALE_FACTOR = 4;
         private float SCREEN_WIDTH_SCALE;
         private float SCREEN_HEIGHT_SCALE;
         private float screenWidth;
@@ -287,16 +279,11 @@ public class ReceiptScannerFotoapparat extends Fragment {
 //                    point.y = point.y*SCALE_FACTOR;
 //                });
                 points = getRect(mRGBA).toList();
+                correctPoints();
 
                 canvas = surfaceView.getHolder().lockCanvas();
                 canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-                points.forEach(point -> {
-                    float oldX = (float)point.x * SCREEN_WIDTH_SCALE;
-                    float oldY = (float)point.y * SCREEN_HEIGHT_SCALE;
-                    float newX = ((screenHeight - oldY) / screenHeight) * screenWidth;
-                    float newY = (oldX / screenWidth) * screenHeight;
-                    canvas.drawCircle(newX, newY, 30, paint);
-                });
+                points.forEach(point -> canvas.drawCircle((float)point.x, (float)point.y, 30, paint));
                 surfaceView.getHolder().unlockCanvasAndPost(canvas);
             }
             catch(Exception e) {
@@ -326,11 +313,23 @@ public class ReceiptScannerFotoapparat extends Fragment {
             return largest;
         }
 
+        private void correctPoints(){
+            List<Point> correctedPoints = new ArrayList<>();
+            points.forEach(point -> {
+                float oldX = (float)point.x * SCREEN_WIDTH_SCALE;
+                float oldY = (float)point.y * SCREEN_HEIGHT_SCALE;
+                float newX = ((screenHeight - oldY) / screenHeight) * screenWidth;
+                float newY = (oldX / screenWidth) * screenHeight;
+                correctedPoints.add(new Point(newX, newY));
+            });
+            points = correctedPoints;
+        }
+
         private MatOfPoint getRect(Mat mRGBA){
             Mat img = new Mat();
             mRGBA.copyTo(img);
             Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2GRAY, 4);
-            Imgproc.blur(img, img, new Size(3, 3));
+            Imgproc.blur(img, img, new Size(7, 7));
             Core.normalize(img, img, 0, 255, Core.NORM_MINMAX);
             Imgproc.threshold(img,img, 150,255,Imgproc.THRESH_TRUNC);
             Core.normalize(img, img, 0, 255, Core.NORM_MINMAX);
@@ -341,7 +340,6 @@ public class ReceiptScannerFotoapparat extends Fragment {
 //        //new Mat to hierarchy
             Imgproc.findContours(img, contours, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
             return getLargestContour(contours);
-
         }
 
         private Bitmap cropToPoints(List<Point> corners, Mat mRGBA){
@@ -360,8 +358,8 @@ public class ReceiptScannerFotoapparat extends Fragment {
                     corners.get(3).x, 2) + Math.pow(corners.get(2).y -
                     corners.get(3).y, 2));
             double left = Math.sqrt(Math.pow(corners.get(3).x -
-                    corners.get(1).x, 2) + Math.pow(corners.get(3).y -
-                    corners.get(1).y, 2));
+                    corners.get(0).x, 2) + Math.pow(corners.get(3).y -
+                    corners.get(0).y, 2));
             Mat quad = Mat.zeros(new Size(Math.max(top, bottom),
                     Math.max(left, right)), CvType.CV_8UC3);
 
@@ -382,15 +380,18 @@ public class ReceiptScannerFotoapparat extends Fragment {
             return bitmap;
         }
 
-        private void sortCorners(List<Point> corners)
-        {
+        private void sortCorners(List<Point> corners) {
             List<Point> top = new ArrayList<>();
             List<Point> bottom = new ArrayList<>();
             Point center = new Point();
             for(int i=0; i<corners.size(); i++){
-                center.x += corners.get(i).x/corners.size();
-                center.y += corners.get(i).y/corners.size();
+//                center.x += corners.get(i).x/corners.size();
+//                center.y += corners.get(i).y/corners.size();
+                center.x += corners.get(i).x;
+                center.y += corners.get(i).y;
             }
+            center.x /= corners.size();
+            center.y /= corners.size();
 
             for (int i = 0; i < corners.size(); i++)
             {
@@ -418,5 +419,4 @@ public class ReceiptScannerFotoapparat extends Fragment {
         }
 
     }
-
 }
