@@ -1,7 +1,6 @@
 package com.lgorczynski.shopassist.ui.receipt_scanner;
 
 import android.graphics.Bitmap;
-import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -14,17 +13,14 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.lgorczynski.shopassist.R;
-import com.lgorczynski.shopassist.ui.receipts.ReceiptsViewModel;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCamera2View;
-import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -42,14 +38,10 @@ import org.opencv.utils.Converters;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.Policy;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import io.fotoapparat.preview.Frame;
-import io.fotoapparat.preview.FrameProcessor;
 
 public class ReceiptScannerCameraFragment extends Fragment implements CameraBridgeViewBase.CvCameraViewListener2 {
 
@@ -274,7 +266,7 @@ public class ReceiptScannerCameraFragment extends Fragment implements CameraBrid
             Log.d(TAG, "cropToPoints: Error while creating image file");
         }
 
-        navController.navigate(R.id.action_receiptScannerCameraFragment_to_receiptScannerImagePreviewFragment, bundle);
+        navController.navigate(R.id.action_receiptScannerCameraFragment_to_receiptScannerImageCropFragment, bundle);
     }
 
     private void sortCorners(List<Point> corners)

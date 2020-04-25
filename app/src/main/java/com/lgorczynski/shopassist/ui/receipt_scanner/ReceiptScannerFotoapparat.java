@@ -10,7 +10,6 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,18 +40,11 @@ import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
-import org.opencv.core.TermCriteria;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.utils.Converters;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import io.fotoapparat.Fotoapparat;
@@ -84,6 +76,8 @@ public class ReceiptScannerFotoapparat extends Fragment {
     private View capture;
     private Fotoapparat fotoapparat;
     private SwitchCompat torchSwitch;
+    private SwitchCompat autoDetectSwitch;
+    private boolean autoDetectOn;
     private SurfaceView surfaceView;
     private MyFrameProcessor frameProcessor;
     private BaseLoaderCallback mLoader = new BaseLoaderCallback(getContext()) {
@@ -102,6 +96,8 @@ public class ReceiptScannerFotoapparat extends Fragment {
         focusView = root.findViewById(R.id.focusView);
         capture = root.findViewById(R.id.capture);
         torchSwitch = root.findViewById(R.id.torchSwitch);
+        autoDetectSwitch = root.findViewById(R.id.autoDetectSwitch);
+        autoDetectOn = true;
 
         surfaceView = root.findViewById(R.id.surfaceView);
         surfaceView.setZOrderOnTop(true);
@@ -113,6 +109,7 @@ public class ReceiptScannerFotoapparat extends Fragment {
 
         takePictureOnClick();
         toggleTorchOnSwitch();
+        toogleAutoDetectSwitch();
 
         cameraView.setVisibility(View.VISIBLE);
 
@@ -178,6 +175,15 @@ public class ReceiptScannerFotoapparat extends Fragment {
         });
     }
 
+    private void toogleAutoDetectSwitch(){
+        autoDetectSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                autoDetectOn = !autoDetectOn;
+            }
+        });
+    }
+
     private void takePictureOnClick() {
         capture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,34 +209,30 @@ public class ReceiptScannerFotoapparat extends Fragment {
                         Mat mat = new Mat();
                         Bitmap bmp32 = bitmapPhoto.bitmap.copy(Bitmap.Config.ARGB_8888, true);
                         Utils.bitmapToMat(bmp32, mat);
-                        List<Point> points = frameProcessor.getRect(mat).toList();
-                        Bitmap croppedBitmap = frameProcessor.cropToPoints(points, mat);
-                        mat.release();
-                        try {
-                            File croppedImageFile = createImageFile();
-                            FileOutputStream outputStream = new FileOutputStream(croppedImageFile);
-                            croppedBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-                            outputStream.close();
+                        if(autoDetectOn){
+                            List<Point> points = frameProcessor.getRect(mat).toList();
+                            if(points.size() != 4){
+                                navigateToImageCrop(bmp32);
+                                return;
+                            }
+
+                            Bitmap croppedBitmap = frameProcessor.cropToPoints(points, mat);
+                            mat.release();
 
                             Bundle bundle = new Bundle();
-                            bundle.putString("imagePath", croppedImageFile.getAbsolutePath());
+                            bundle.putParcelable("bitmap", croppedBitmap);
                             navController.navigate(R.id.action_receiptScannerCameraFragment_to_receiptScannerImagePreviewFragment, bundle);
-
                         }
-                        catch(Exception e) {
-                            Log.d(TAG, "whenDone: Failed saving cropped image");
-                        }
-
+                        else
+                            navigateToImageCrop(bmp32);
                     }
                 });
     }
 
-    private File createImageFile() throws IOException {
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timestamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-        return image;
+    private void navigateToImageCrop(Bitmap bmp32){
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("scannedPreview", bmp32);
+        navController.navigate(R.id.action_receiptScannerCameraFragment_to_receiptScannerImageCropFragment, bundle);
     }
 
     private class MyFrameProcessor implements FrameProcessor {
@@ -258,26 +260,24 @@ public class ReceiptScannerFotoapparat extends Fragment {
 
         @Override
         public void process(@NonNull Frame frame) {
-            int width = frame.getSize().width;
-            int height = frame.getSize().height;
-            SCREEN_HEIGHT_SCALE = screenHeight / (float)height;
-            SCREEN_WIDTH_SCALE = screenWidth / (float)width;
-            YuvImage yuvImage = new YuvImage(frame.getImage(), NV21, width, height, null);
+            if(!autoDetectOn){
+                canvas = surfaceView.getHolder().lockCanvas();
+                canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+                surfaceView.getHolder().unlockCanvasAndPost(canvas);
+                return;
+            }
+            int frameWidth = frame.getSize().width;
+            int frameHeight = frame.getSize().height;
+            SCREEN_HEIGHT_SCALE = screenHeight / (float)frameHeight;
+            SCREEN_WIDTH_SCALE = screenWidth / (float)frameWidth;
+            YuvImage yuvImage = new YuvImage(frame.getImage(), NV21, frameWidth, frameHeight, null);
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            yuvImage.compressToJpeg(new Rect(0, 0, width, height), 100, os);
+            yuvImage.compressToJpeg(new Rect(0, 0, frameWidth, frameHeight), 100, os);
             byte[] jpegByteArray = os.toByteArray();
             Bitmap bitmap = BitmapFactory.decodeByteArray(jpegByteArray, 0, jpegByteArray.length);
             Bitmap bmp32 = bitmap.copy(Bitmap.Config.ARGB_8888, true);
             Utils.bitmapToMat(bmp32, mRGBA);
             try {
-//                Mat mResizedRGBA = new Mat();
-//                Imgproc.resize(mRGBA, mResizedRGBA, new Size(mRGBA.cols()/ SCALE_FACTOR, mRGBA.rows()/ SCALE_FACTOR));
-//
-//                points = getRect(mResizedRGBA).toList();
-//                points.forEach(point -> {
-//                    point.x = point.x*SCALE_FACTOR;
-//                    point.y = point.y*SCALE_FACTOR;
-//                });
                 points = getRect(mRGBA).toList();
                 correctPoints();
 
@@ -328,17 +328,42 @@ public class ReceiptScannerFotoapparat extends Fragment {
         private MatOfPoint getRect(Mat mRGBA){
             Mat img = new Mat();
             mRGBA.copyTo(img);
+            Bitmap bitmap = Bitmap.createBitmap(img.cols(), img.rows(), Bitmap.Config.ARGB_8888);
             Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2GRAY, 4);
             Imgproc.blur(img, img, new Size(7, 7));
+            Utils.matToBitmap(img, bitmap);
             Core.normalize(img, img, 0, 255, Core.NORM_MINMAX);
+            Utils.matToBitmap(img, bitmap);
             Imgproc.threshold(img,img, 150,255,Imgproc.THRESH_TRUNC);
+            Utils.matToBitmap(img, bitmap);
             Core.normalize(img, img, 0, 255, Core.NORM_MINMAX);
+            Utils.matToBitmap(img, bitmap);
             Imgproc.Canny(img, img, 185, 85);
+            Utils.matToBitmap(img, bitmap);
             Imgproc.threshold(img,img,155,255,Imgproc.THRESH_TOZERO);
+            Utils.matToBitmap(img, bitmap);
             Imgproc.morphologyEx(img, img, Imgproc.MORPH_CLOSE, morph_kernel, new Point(-1,-1),1);
+            Utils.matToBitmap(img, bitmap);
             List<MatOfPoint> contours = new ArrayList<>();
 //        //new Mat to hierarchy
             Imgproc.findContours(img, contours, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+            return getLargestContour(contours);
+        }
+
+        private MatOfPoint getPage(Mat mRGBA){
+            Mat img = new Mat();
+            mRGBA.copyTo(img);
+
+            Bitmap bitmap = Bitmap.createBitmap(img.cols(), img.rows(), Bitmap.Config.ARGB_8888);
+            Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2GRAY);
+            Utils.matToBitmap(img, bitmap);
+            Imgproc.blur(img, img, new Size(3, 3));
+            Utils.matToBitmap(img, bitmap);
+            Imgproc.Canny(img, img, 70, 200, 3);
+            Utils.matToBitmap(img, bitmap);
+            List<MatOfPoint> contours = new ArrayList<>();
+//        //new Mat to hierarchy
+            Imgproc.findContours(img, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
             return getLargestContour(contours);
         }
 

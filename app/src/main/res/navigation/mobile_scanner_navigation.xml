@@ -11,8 +11,39 @@
         android:label="fragment_receipt_scanner_camera"
         tools:layout="@layout/fragment_receipt_scanner_camera">
         <action
+            android:id="@+id/action_receiptScannerCameraFragment_to_receiptScannerImageCropFragment"
+            app:destination="@id/receiptScannerImageCropFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+        <action
             android:id="@+id/action_receiptScannerCameraFragment_to_receiptScannerImagePreviewFragment"
-            app:destination="@id/receiptScannerImagePreviewFragment" />
+            app:destination="@+id/receiptScannerImagePreviewFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/receiptScannerImageCropFragment"
+        android:name="com.lgorczynski.shopassist.ui.receipt_scanner.ReceiptScannerImageCropFragment"
+        android:label="fragment_receipt_scanner_crop"
+        tools:layout="@layout/fragment_receipt_scanner_crop">
+        <action
+            android:id="@+id/action_receiptScannerImageCropFragment_to_receiptScannerCameraFragment2"
+            app:destination="@id/receiptScannerCameraFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+        <action
+            android:id="@+id/action_receiptScannerImageCropFragment_to_receiptScannerImagePreviewFragment"
+            app:destination="@id/receiptScannerImagePreviewFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/receiptScannerImagePreviewFragment"

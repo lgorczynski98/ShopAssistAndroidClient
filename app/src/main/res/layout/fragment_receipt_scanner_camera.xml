@@ -59,17 +59,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|center_vertical"
+                android:layout_marginLeft="20dp"
                 android:padding="20dp"
                 tools:ignore="RtlHardcoded" />
 
-        </FrameLayout>
+            <ImageView
+                android:id="@+id/flash_sign"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="bottom|center_horizontal|left"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/ic_flash_on_black_24dp"
+                tools:ignore="ContentDescription" />
 
-        <ImageView
-            android:id="@+id/result"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="bottom|left"
-            tools:ignore="ContentDescription,RtlHardcoded" />
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/autoDetectSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:padding="20dp"
+                tools:ignore="RtlHardcoded" />
+
+            <ImageView
+                android:id="@+id/auto_detect_sign"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="bottom|right|center_horizontal"
+                android:layout_marginRight="70dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/ic_photo_size_select_large_black_24dp"
+                tools:ignore="ContentDescription" />
+
+        </FrameLayout>
 
         <ImageView
             android:id="@+id/capture"
@@ -77,7 +98,7 @@
             android:layout_height="70dp"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="10dp"
-            android:src="@drawable/ic_camera_black_24dp"
+            android:src="@drawable/ic_camera_primary_24dp"
             tools:ignore="ContentDescription" />
 
     </FrameLayout>

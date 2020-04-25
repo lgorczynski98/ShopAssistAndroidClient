@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/receipt_scanner_crop_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#DF2E2B2B"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/receipt_scanner_crop_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:adjustViewBounds="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/sym_def_app_icon" />
+
+    <SurfaceView
+        android:id="@+id/receipt_scanner_crop_surface_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/receipt_scanner_crop_point_preview"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="10dp"
+        android:visibility="gone"
+        app:civ_border_width="2dp"
+        app:civ_border_color="@color/colorPrimary"
+        app:srcCompat="@android:drawable/sym_def_app_icon" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/ic_adjust_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/imageButton2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/ic_adjust_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/imageButton3"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/ic_adjust_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/imageButton4"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/ic_adjust_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/receipt_scanner_crop_apply"
+        style="@style/Widget.AppCompat.ImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/circle_button"
+        app:srcCompat="@drawable/ic_done_black_24dp" />
+
+</FrameLayout>
