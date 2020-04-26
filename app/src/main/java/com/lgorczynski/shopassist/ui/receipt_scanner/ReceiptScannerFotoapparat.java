@@ -180,9 +180,14 @@ public class ReceiptScannerFotoapparat extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 autoDetectOn = !autoDetectOn;
-                Canvas canvas = surfaceView.getHolder().lockCanvas();
-                canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-                surfaceView.getHolder().unlockCanvasAndPost(canvas);
+                try {
+                    Canvas canvas = surfaceView.getHolder().lockCanvas();
+                    canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+                    surfaceView.getHolder().unlockCanvasAndPost(canvas);
+                }
+                catch(Exception e) {
+                    Log.d(TAG, "onCheckedChanged: Error when canvas is null on leaving fragment");
+                }
             }
         });
     }
