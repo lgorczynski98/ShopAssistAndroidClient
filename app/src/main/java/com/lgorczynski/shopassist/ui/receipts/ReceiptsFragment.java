@@ -1,5 +1,6 @@
 package com.lgorczynski.shopassist.ui.receipts;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,6 +25,8 @@ import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ReceiptScannerActivity;
 
 import java.util.List;
+
+import javax.xml.transform.Result;
 
 public class ReceiptsFragment extends Fragment {
 
@@ -74,6 +77,20 @@ public class ReceiptsFragment extends Fragment {
     private void startScanningReceipt(){
         Toast.makeText(getContext(), "Clicked on receipt fragment", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), ReceiptScannerActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_DOCUMENT_SCAN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_DOCUMENT_SCAN){
+            Bundle extras = data.getExtras();
+            if(extras != null){
+//                String imagePath = extras.getString("image");
+                Toast.makeText(getContext(), "Correctly extracted receipt!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+        Toast.makeText(getContext(), "Canceled on extracting receipt", Toast.LENGTH_SHORT).show();
     }
 }

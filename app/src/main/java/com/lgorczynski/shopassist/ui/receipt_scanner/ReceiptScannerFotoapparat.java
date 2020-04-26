@@ -180,6 +180,9 @@ public class ReceiptScannerFotoapparat extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 autoDetectOn = !autoDetectOn;
+                Canvas canvas = surfaceView.getHolder().lockCanvas();
+                canvas.drawColor(0, PorterDuff.Mode.CLEAR);
+                surfaceView.getHolder().unlockCanvasAndPost(canvas);
             }
         });
     }
@@ -260,12 +263,8 @@ public class ReceiptScannerFotoapparat extends Fragment {
 
         @Override
         public void process(@NonNull Frame frame) {
-            if(!autoDetectOn){
-                canvas = surfaceView.getHolder().lockCanvas();
-                canvas.drawColor(0, PorterDuff.Mode.CLEAR);
-                surfaceView.getHolder().unlockCanvasAndPost(canvas);
+            if(!autoDetectOn)
                 return;
-            }
             int frameWidth = frame.getSize().width;
             int frameHeight = frame.getSize().height;
             SCREEN_HEIGHT_SCALE = screenHeight / (float)frameHeight;
@@ -281,6 +280,8 @@ public class ReceiptScannerFotoapparat extends Fragment {
                 points = getRect(mRGBA).toList();
                 correctPoints();
 
+                if(!autoDetectOn)
+                    return;
                 canvas = surfaceView.getHolder().lockCanvas();
                 canvas.drawColor(0, PorterDuff.Mode.CLEAR);
                 points.forEach(point -> canvas.drawCircle((float)point.x, (float)point.y, 30, paint));
