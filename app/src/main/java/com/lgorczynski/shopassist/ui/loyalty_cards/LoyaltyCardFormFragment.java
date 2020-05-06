@@ -15,10 +15,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -34,6 +38,7 @@ import static android.app.Activity.RESULT_OK;
 public class LoyaltyCardFormFragment extends Fragment implements View.OnClickListener{
 
     private static final String TAG = "LoyaltyCardFormFragment";
+    private NavController navController;
 
     private int REQUEST_PICK_PHOTO = 100;
     private int REQUEST_CAPTURE = 101;
@@ -74,6 +79,12 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
+    }
+
+    @Override
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.loyalty_card_form_from_gallery_button:{
@@ -103,7 +114,8 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
                 break;
             }
             case R.id.loyalty_card_form_submit_button:{
-
+                Toast.makeText(getContext(), "Added loyalty card correctly", Toast.LENGTH_SHORT).show();
+                navController.popBackStack();
                 break;
             }
         }

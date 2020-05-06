@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +21,16 @@ import androidx.fragment.app.Fragment;
 import com.lgorczynski.shopassist.R;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static androidx.constraintlayout.widget.Constraints.TAG;
+
 public class ReceiptScannerImagePreviewFragment extends Fragment implements View.OnClickListener {
 
+    private static final String TAG = "ReceiptScannerImagePrev";
     private Bitmap bitmap;
     private ImageView imageView;
 
@@ -54,7 +59,15 @@ public class ReceiptScannerImagePreviewFragment extends Fragment implements View
             case R.id.receipt_scanner_preview_apply:{
                 try {
                     Intent intent = new Intent();
-                    intent.putExtra("image", createImageFile().getAbsolutePath());
+                    File file = createImageFile();
+                    try(FileOutputStream out = new FileOutputStream(file)) {
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+                    }
+                    catch(Exception e) {
+                        Log.d(TAG, "onClick: Error on saving receipt");
+                        getActivity().finish();
+                    }
+                    intent.putExtra("imagePath", file.getAbsolutePath());
                     getActivity().setResult(Activity.RESULT_OK, intent);
                     getActivity().finish();
                 }

@@ -2,6 +2,8 @@ package com.lgorczynski.shopassist.ui.receipts;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ReceiptScannerActivity;
 
+import java.io.File;
 import java.util.List;
 
 import javax.xml.transform.Result;
@@ -86,8 +89,11 @@ public class ReceiptsFragment extends Fragment {
         if(resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_DOCUMENT_SCAN){
             Bundle extras = data.getExtras();
             if(extras != null){
-//                String imagePath = extras.getString("image");
+                String imagePath = extras.getString("imagePath");
                 Toast.makeText(getContext(), "Correctly extracted receipt!", Toast.LENGTH_SHORT).show();
+                Bundle bundle = new Bundle();
+                bundle.putString("imagePath", imagePath);
+                navController.navigate(R.id.action_navigation_receipts_to_receiptFormFragment, bundle);
                 return;
             }
         }

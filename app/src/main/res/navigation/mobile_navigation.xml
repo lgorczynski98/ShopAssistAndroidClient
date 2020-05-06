@@ -12,7 +12,9 @@
         tools:layout="@layout/fragment_loyalty_cards" >
         <action
             android:id="@+id/action_navigation_loyalty_cards_to_loyaltyCardFormFragment"
-            app:destination="@id/loyaltyCardFormFragment" />
+            app:destination="@id/loyaltyCardFormFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_navigation_loyalty_cards_to_loyaltyCardEditFormFragment"
             app:destination="@id/loyaltyCardEditFormFragment"
@@ -29,7 +31,9 @@
         tools:layout="@layout/fragment_receipts" >
         <action
             android:id="@+id/action_navigation_receipts_to_receiptFormFragment"
-            app:destination="@id/receiptFormFragment" />
+            app:destination="@id/receiptFormFragment"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment

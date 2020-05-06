@@ -28,4 +28,7 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="apply">Apply</string>
+    <string name="price">Price</string>
+    <string name="product_name">Product Name</string>
+    <string name="quantity">Quantity</string>
 </resources>

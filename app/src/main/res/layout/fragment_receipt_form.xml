@@ -15,13 +15,14 @@
             android:id="@+id/receipt_form_receipt_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxHeight="100dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/sym_def_app_icon" />
 
         <EditText
-            android:id="@+id/editText3"
+            android:id="@+id/receipt_form_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -30,25 +31,63 @@
             android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/editText9"
+            android:id="@+id/receipt_form_shop_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ems="10"
+            android:hint="Shop Name"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/receipt_form_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Purchase date"
+            android:hint="Purchase Date"
             android:inputType="date" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/fragment_receipt_form_recyclerview"
+        <EditText
+            android:id="@+id/receipt_form_cost"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Purchase Cost"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/receipt_form_extracted_text_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/receipt_form_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
         </androidx.recyclerview.widget.RecyclerView>
 
         <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
+            android:id="@+id/receipt_form_add_product"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/rounded_confirm_button"
+            android:text="Add new product"
+            android:textColor="@android:color/primary_text_dark" />
+
+        <Button
+            android:id="@+id/receipt_form_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@drawable/rounded_confirm_button"
+            android:text="@string/submit"
+            android:textColor="@android:color/primary_text_dark" />
 
     </LinearLayout>
 </ScrollView>
