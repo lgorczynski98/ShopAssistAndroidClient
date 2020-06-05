@@ -1,39 +1,38 @@
-package com.lgorczynski.shopassist.ui.log_in;
+package com.lgorczynski.shopassist.ui.register;
 
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
+import com.lgorczynski.shopassist.ui.log_in.LoginResponse;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class LoginRepository {
+public class RegisterRepository {
 
-    private static final String LOGIN_SERVICE_BASE_URL = "http://192.168.0.52:8000/";
-    private static final String TAG = "LoginRepository";
+    private static final String REGISTER_SERVICE_BASE_URL = "http://192.168.0.52:8000/";
+    private static final String TAG = "RegisterRepository";
 
-    private LoginService loginService;
+    private RegisterService registerService;
     private MutableLiveData<LoginResponse> loginResponseMutableLiveData;
 
-    public LoginRepository(){
+    public RegisterRepository(){
         loginResponseMutableLiveData = new MutableLiveData<>();
 
-        loginService = new Retrofit.Builder()
-                .baseUrl(LOGIN_SERVICE_BASE_URL)
+        registerService = new Retrofit.Builder()
+                .baseUrl(REGISTER_SERVICE_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(LoginService.class);
+                .create(RegisterService.class);
     }
 
-    public void loginUser(String email, String password){
-        loginService.login(email, password)
+    public void registerUser(String email, String username, String password){
+        registerService.register(email, username, password)
                 .enqueue(new Callback<LoginResponse>() {
                     @Override
                     public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
@@ -51,7 +50,7 @@ public class LoginRepository {
                 });
     }
 
-    public LiveData<LoginResponse> getLoginResponseLiveData(){
+    public LiveData<LoginResponse> getLoginRepsonseLiveData(){
         return loginResponseMutableLiveData;
     }
 

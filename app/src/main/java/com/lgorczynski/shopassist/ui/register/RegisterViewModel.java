@@ -4,16 +4,23 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.lgorczynski.shopassist.ui.log_in.LoginResponse;
+
 public class RegisterViewModel extends ViewModel {
 
-    private MutableLiveData<String> mText;
+    private RegisterRepository registerRepository;
+    private LiveData<LoginResponse> loginResponseLiveData;
 
     public RegisterViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is register fragment");
+        registerRepository = new RegisterRepository();
+        loginResponseLiveData = registerRepository.getLoginRepsonseLiveData();
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public void register(String email, String username, String password){
+        registerRepository.registerUser(email, username, password);
+    }
+
+    public LiveData<LoginResponse> getLoginResponseLiveData(){
+        return loginResponseLiveData;
     }
 }

@@ -35,13 +35,14 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
         logInViewModel =
                 ViewModelProviders.of(this).get(LogInViewModel.class);
         View root = inflater.inflate(R.layout.fragment_log_in, container, false);
-//        final TextView textView = root.findViewById(R.id.text_log_in);
-//        logInViewModel.getText().observe(this, new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
+
+        final Button signInButton = root.findViewById(R.id.sign_in_button);
+        final Button registerButton = root.findViewById(R.id.register_button);
+        emailTextView = root.findViewById(R.id.log_in_email_input);
+        passwordTextView = root.findViewById(R.id.log_in_password_input);
+        signInButton.setOnClickListener(this);
+        registerButton.setOnClickListener(this);
+
         logInViewModel.getLoginResponseLiveData().observe(this, new Observer<LoginResponse>() {
             @Override
             public void onChanged(LoginResponse loginResponse) {
@@ -64,13 +65,6 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
-
-        final Button signInButton = view.findViewById(R.id.sign_in_button);
-        final Button registerButton = view.findViewById(R.id.register_button);
-        emailTextView = view.findViewById(R.id.log_in_email_input);
-        passwordTextView = view.findViewById(R.id.log_in_password_input);
-        signInButton.setOnClickListener(this);
-        registerButton.setOnClickListener(this);
     }
 
     @Override

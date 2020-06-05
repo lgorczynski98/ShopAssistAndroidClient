@@ -106,7 +106,12 @@
         android:id="@+id/registerFragment"
         android:name="com.lgorczynski.shopassist.ui.register.RegisterFragment"
         android:label="@string/register"
-        tools:layout="@layout/fragment_register" />
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_navigation_loyalty_cards"
+            app:destination="@id/navigation_loyalty_cards"
+            app:popUpTo="@+id/mobile_navigation" />
+    </fragment>
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.lgorczynski.shopassist.ui.about.AboutFragment"
