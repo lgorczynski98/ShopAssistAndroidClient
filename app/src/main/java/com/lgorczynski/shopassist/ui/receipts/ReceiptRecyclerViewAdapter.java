@@ -24,17 +24,19 @@ public class ReceiptRecyclerViewAdapter extends RecyclerView.Adapter<ReceiptRecy
 
     private List<Receipt> mReceipts;
     private Context mContext;
+    private OnReceiptClickListener mOnReceiptClickListener;
 
-    public ReceiptRecyclerViewAdapter(Context mContext, List<Receipt> mReceipts) {
+    public ReceiptRecyclerViewAdapter(Context mContext, List<Receipt> mReceipts, OnReceiptClickListener onReceiptClickListener) {
         this.mReceipts = mReceipts;
         this.mContext = mContext;
+        this.mOnReceiptClickListener = onReceiptClickListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.receipt_list_item_layout, parent, false);
-        ViewHolder holder = new ViewHolder(view);
+        ViewHolder holder = new ViewHolder(view, mOnReceiptClickListener);
         return holder;
     }
 
@@ -47,13 +49,6 @@ public class ReceiptRecyclerViewAdapter extends RecyclerView.Adapter<ReceiptRecy
         holder.title.setText(receipt.getTitle());
         holder.price.setText(String.valueOf(receipt.getPrice()));
         holder.date.setText(receipt.getPurchaseDate());
-
-        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(mContext, "Clicked on: " + receipt.getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
@@ -61,15 +56,20 @@ public class ReceiptRecyclerViewAdapter extends RecyclerView.Adapter<ReceiptRecy
         return mReceipts.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public Receipt getItemOnPosition(int position){
+        return mReceipts.get(position);
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView image;
         TextView title;
         TextView price;
         TextView date;
         ConstraintLayout parentLayout;
+        OnReceiptClickListener onReceiptClickListener;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, OnReceiptClickListener onReceiptClickListener) {
             super(itemView);
 
             image = itemView.findViewById(R.id.receipt_list_image);
@@ -77,6 +77,17 @@ public class ReceiptRecyclerViewAdapter extends RecyclerView.Adapter<ReceiptRecy
             price = itemView.findViewById(R.id.receipt_list_price);
             date = itemView.findViewById(R.id.receipt_list_date);
             parentLayout = itemView.findViewById(R.id.receipt_parent_layout);
+            this.onReceiptClickListener = onReceiptClickListener;
+            parentLayout.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view) {
+            onReceiptClickListener.onReceiptClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnReceiptClickListener{
+        void onReceiptClick(int position);
     }
 }

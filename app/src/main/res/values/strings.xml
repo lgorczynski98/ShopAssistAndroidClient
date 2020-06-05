@@ -4,6 +4,9 @@
     <string name="title_receipts">Receipts</string>
     <string name="title_profile">Profile</string>
     <string name="title_log_in">Sign In</string>
+    <string name="title_receipt_form">Add new receipt</string>
+    <string name="title_loyalty_card_form">Add new loyalty card</string>
+    <string name="title_loyalty_card_edit_form">Edit loyalty card</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
     <string name="register">Register</string>
@@ -31,4 +34,6 @@
     <string name="price">Price</string>
     <string name="product_name">Product Name</string>
     <string name="quantity">Quantity</string>
+    <string name="return_text">Return</string>
+    <string name="warranty">Warranty</string>
 </resources>

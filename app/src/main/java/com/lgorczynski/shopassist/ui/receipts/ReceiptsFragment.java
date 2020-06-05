@@ -31,7 +31,7 @@ import java.util.List;
 
 import javax.xml.transform.Result;
 
-public class ReceiptsFragment extends Fragment {
+public class ReceiptsFragment extends Fragment implements ReceiptRecyclerViewAdapter.OnReceiptClickListener{
 
     private ReceiptsViewModel receiptsViewModel;
 
@@ -59,7 +59,7 @@ public class ReceiptsFragment extends Fragment {
         receiptsViewModel.getReceipts().observe(this, new Observer<List<Receipt>>() {
             @Override
             public void onChanged(List<Receipt> receipts) {
-                adapter = new ReceiptRecyclerViewAdapter(getContext(), receipts);
+                adapter = new ReceiptRecyclerViewAdapter(getContext(), receipts, ReceiptsFragment.this);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setAdapter(adapter);
             }
@@ -98,5 +98,13 @@ public class ReceiptsFragment extends Fragment {
             }
         }
         Toast.makeText(getContext(), "Canceled on extracting receipt", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onReceiptClick(int position) {
+        Receipt receipt = adapter.getItemOnPosition(position);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("receipt", receipt);
+        navController.navigate(R.id.action_navigation_receipts_to_receiptPreviewFragment, bundle);
     }
 }

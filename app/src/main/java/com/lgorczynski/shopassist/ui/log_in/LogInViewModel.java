@@ -1,19 +1,28 @@
 package com.lgorczynski.shopassist.ui.log_in;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class LogInViewModel extends ViewModel {
+public class LogInViewModel extends ViewModel{
 
-    private MutableLiveData<String> mText;
+    private LoginRepository loginRepository;
+    private LiveData<LoginResponse> loginResponseLiveData;
 
-    public LogInViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("Sign In");
+    public LogInViewModel(){
+        loginRepository = new LoginRepository();
+        loginResponseLiveData = loginRepository.getLoginResponseLiveData();
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public void login(String email, String password){
+        loginRepository.loginUser(email, password);
+    }
+
+    public LiveData<LoginResponse> getLoginResponseLiveData(){
+        return loginResponseLiveData;
     }
 }
