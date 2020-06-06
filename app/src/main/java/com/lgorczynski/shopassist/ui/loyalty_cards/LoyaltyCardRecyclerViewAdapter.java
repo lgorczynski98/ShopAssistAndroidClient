@@ -15,22 +15,36 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lgorczynski.shopassist.R;
+import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
+import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 import java.util.List;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class LoyaltyCardRecyclerViewAdapter extends RecyclerView.Adapter<LoyaltyCardRecyclerViewAdapter.ViewHolder>{
 
     private static final String TAG = "LoyaltyCardRecyclerView";
+    private static final String LOYALTYCARDS_IMAGE_BASE_URL = CredentialsSingleton.BASE_URL + "loyaltycards/image/";
 
     private List<LoyaltyCard> mLoyaltyCards;
     private Context mContext;
     private OnCardClickListener mOnCardClickListener;
 
+    private LoyaltyCardsPicasso loyaltyCardsPicasso;
+
     public LoyaltyCardRecyclerViewAdapter(Context mContext, List<LoyaltyCard> mLoyaltyCards, OnCardClickListener onCardClickListener) {
         this.mLoyaltyCards = mLoyaltyCards;
         this.mContext = mContext;
         this.mOnCardClickListener = onCardClickListener;
+        this.loyaltyCardsPicasso = new LoyaltyCardsPicasso(mContext);
     }
 
     @NonNull
@@ -46,7 +60,9 @@ public class LoyaltyCardRecyclerViewAdapter extends RecyclerView.Adapter<Loyalty
         Log.d(TAG, "onBindViewHolder: called");
 
         final LoyaltyCard loyaltyCard = mLoyaltyCards.get(position);
-        Picasso.get().load(loyaltyCard.getImageUrl()).into(holder.image);
+
+        Picasso picasso = loyaltyCardsPicasso.getPicasso();
+        picasso.load(LOYALTYCARDS_IMAGE_BASE_URL + loyaltyCard.getId() + "/").into(holder.image);
         holder.title.setText(loyaltyCard.getTitle());
     }
 

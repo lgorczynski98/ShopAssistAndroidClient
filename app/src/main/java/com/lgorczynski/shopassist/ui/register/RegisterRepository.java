@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
 import com.lgorczynski.shopassist.ui.log_in.LoginResponse;
 
 import retrofit2.Call;
@@ -15,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RegisterRepository {
 
-    private static final String REGISTER_SERVICE_BASE_URL = "http://192.168.0.52:8000/";
+    private static final String REGISTER_SERVICE_BASE_URL = CredentialsSingleton.BASE_URL;
     private static final String TAG = "RegisterRepository";
 
     private RegisterService registerService;

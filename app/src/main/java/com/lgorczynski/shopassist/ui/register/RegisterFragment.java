@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.lgorczynski.shopassist.R;
+import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
 import com.lgorczynski.shopassist.ui.log_in.LoginResponse;
 
 public class RegisterFragment extends Fragment implements View.OnClickListener {
@@ -56,6 +57,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        CredentialsSingleton.getInstance().setToken("Token " + loginResponse.getToken());
                         navController.navigate(R.id.action_registerFragment_to_navigation_loyalty_cards);
                     }
                 });

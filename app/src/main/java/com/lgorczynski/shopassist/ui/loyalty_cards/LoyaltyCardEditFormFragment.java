@@ -26,7 +26,9 @@ public class LoyaltyCardEditFormFragment extends LoyaltyCardFormFragment {
         editText.setText(title);
 
         final ImageView image = root.findViewById(R.id.loyalty_card_form_card_image);
-        Picasso.get().load(imageUrl).into(image);
+        LoyaltyCardsPicasso loyaltyCardsPicasso = new LoyaltyCardsPicasso(getContext());
+        Picasso picasso = loyaltyCardsPicasso.getPicasso();
+        picasso.load(imageUrl).into(image);
 
         return root;
     }

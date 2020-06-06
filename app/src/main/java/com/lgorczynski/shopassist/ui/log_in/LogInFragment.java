@@ -52,6 +52,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
                 alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        CredentialsSingleton.getInstance().setToken("Token " + loginResponse.getToken());
                         navController.navigate(R.id.action_logInFragment_to_navigation_home);
                     }
                 });

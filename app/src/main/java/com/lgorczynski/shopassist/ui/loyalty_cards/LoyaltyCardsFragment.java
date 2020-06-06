@@ -26,6 +26,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.vision.text.Line;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.BarcodeFormat;
@@ -34,12 +35,14 @@ import com.google.zxing.integration.android.IntentResult;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.CaptureActivityPortrait;
+import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
 
 import java.util.List;
 
 public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecyclerViewAdapter.OnCardClickListener, View.OnClickListener{
 
     private static final String TAG = "LoyaltyCardsFragment";
+    private static final String LOYALTYCARDS_IMAGE_BASE_URL = CredentialsSingleton.BASE_URL + "loyaltycards/image/";
 
     private LoyaltyCardsViewModel loyaltyCardsViewModel;
 
@@ -53,17 +56,10 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
         loyaltyCardsViewModel =
                 ViewModelProviders.of(this).get(LoyaltyCardsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_loyalty_cards, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
-        loyaltyCardsViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
 
         //recycler view z kartami lojalnosciowymi
         recyclerView = root.findViewById(R.id.loyalty_cards_recycler_view);
-        loyaltyCardsViewModel.getLoyaltyCards().observe(this, new Observer<List<LoyaltyCard>>() {
+        loyaltyCardsViewModel.getLoyaltyCardsResponseLiveData().observe(this, new Observer<List<LoyaltyCard>>() {
             @Override
             public void onChanged(List<LoyaltyCard> loyaltyCards) {
                 adapter = new LoyaltyCardRecyclerViewAdapter(getContext(), loyaltyCards, LoyaltyCardsFragment.this);
@@ -71,6 +67,8 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
                 recyclerView.setAdapter(adapter);
             }
         });
+
+        loyaltyCardsViewModel.getLoyaltyCards(CredentialsSingleton.getInstance().getToken());
 
         //skanowanie kodow
         FloatingActionButton fab = root.findViewById(R.id.loyalty_cards_fab);
@@ -166,7 +164,7 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
             bundle.putString("content", card.getContent());
             bundle.putString("format", card.getFormat());
             bundle.putString("title", card.getTitle());
-            bundle.putString("imageUrl", card.getImageUrl());
+            bundle.putString("imageUrl", LOYALTYCARDS_IMAGE_BASE_URL + card.getId() + "/");
             navController.navigate(R.id.action_navigation_loyalty_cards_to_loyaltyCardEditFormFragment, bundle);
             bottomSheetDialog.cancel();
         });

@@ -1,10 +1,28 @@
 package com.lgorczynski.shopassist.ui.loyalty_cards;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class LoyaltyCard {
 
+    @SerializedName("id")
+    @Expose
+    private int id;
+
+    @SerializedName("title")
+    @Expose
     private String title;
+
+    @SerializedName("image")
+    @Expose
     private String imageUrl;
+
+    @SerializedName("barcode_format")
+    @Expose
     private String format;
+
+    @SerializedName("barcode_content")
+    @Expose
     private String content;
 
     public LoyaltyCard(String title, String imageUrl, String format, String content) {
@@ -12,6 +30,10 @@ public class LoyaltyCard {
         this.imageUrl = imageUrl;
         this.format = format;
         this.content = content;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {

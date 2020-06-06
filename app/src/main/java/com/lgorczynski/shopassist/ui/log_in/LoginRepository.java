@@ -5,9 +5,6 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -16,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginRepository {
 
-    private static final String LOGIN_SERVICE_BASE_URL = "http://192.168.0.52:8000/";
+    private static final String LOGIN_SERVICE_BASE_URL = CredentialsSingleton.BASE_URL;
     private static final String TAG = "LoginRepository";
 
     private LoginService loginService;
