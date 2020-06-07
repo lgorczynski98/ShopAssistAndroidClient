@@ -168,7 +168,10 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
             navController.navigate(R.id.action_navigation_loyalty_cards_to_loyaltyCardEditFormFragment, bundle);
             bottomSheetDialog.cancel();
         });
-        delete.setOnClickListener(this);
+        delete.setOnClickListener(view -> {
+            loyaltyCardsViewModel.deleteLoyaltyCard(String.valueOf(card.getId()), CredentialsSingleton.getInstance().getToken());
+            bottomSheetDialog.cancel();
+        });
 
         bottomSheetDialog.show();
     }
@@ -179,11 +182,6 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
         switch(view.getId()){
             case R.id.loyalty_cards_settings_bottom_sheet_dialog_share_layout:{
                 Toast.makeText(getContext(), "Clicked on share", Toast.LENGTH_SHORT).show();
-
-                break;
-            }
-            case R.id.loyalty_cards_settings_bottom_sheet_dialog_delete_layout:{
-                Toast.makeText(getContext(), "Clicked on delete", Toast.LENGTH_SHORT).show();
                 break;
             }
         }

@@ -1,14 +1,20 @@
 package com.lgorczynski.shopassist.ui.loyalty_cards;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
 
+import java.io.File;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,13 +46,65 @@ public class LoyaltyCardsRepository {
                     @Override
                     public void onResponse(Call<List<LoyaltyCard>> call, Response<List<LoyaltyCard>> response) {
                         loyaltyCardsResponseMutableLiveData.postValue(response.body());
-                        Log.d(TAG, "onResponse: successfull");
+                        Log.d(TAG, "onGetResponse: successfull");
                     }
 
                     @Override
                     public void onFailure(Call<List<LoyaltyCard>> call, Throwable t) {
                         loyaltyCardsResponseMutableLiveData.postValue(null);
-                        Log.d(TAG, "onFailure: " + t.getMessage());
+                        Log.d(TAG, "onGetFailure: " + t.getMessage());
+                    }
+                });
+    }
+
+    public void postLoyaltyCard(String title, String barcode_format, String barcode_content, File image, String token){
+        RequestBody requestFile = RequestBody.create(image, MediaType.parse("multipart/form-data"));
+        MultipartBody.Part imageBody = MultipartBody.Part.createFormData("image", image.getName(), requestFile);
+
+        RequestBody requestTitle = RequestBody.create(title, MediaType.parse("multipart/form-data"));
+        RequestBody requestBarcodeFormat = RequestBody.create(barcode_format, MediaType.parse("multipart/form-data"));
+        RequestBody requestBarcodeContent = RequestBody.create(barcode_content, MediaType.parse("multipart/form-data"));
+
+        loyaltyCardsService.postLoyaltyCard(requestTitle, requestBarcodeFormat, requestBarcodeContent, imageBody, token)
+                .enqueue(new Callback<LoyaltyCard>() {
+                    @Override
+                    public void onResponse(Call<LoyaltyCard> call, Response<LoyaltyCard> response) {
+                        Log.d(TAG, "onPostResponse: Loyalty card added succesfully");
+                    }
+
+                    @Override
+                    public void onFailure(Call<LoyaltyCard> call, Throwable t) {
+                        Log.d(TAG, "onPostFailure: Error on adding loyaltycard");
+                    }
+                });
+    }
+
+    public void postLoyaltyCard(String title, String barcode_format, String barcode_content, String token){
+        loyaltyCardsService.postLoyaltyCards(title, barcode_format, barcode_content, token)
+                .enqueue(new Callback<LoyaltyCard>() {
+                    @Override
+                    public void onResponse(Call<LoyaltyCard> call, Response<LoyaltyCard> response) {
+                        Log.d(TAG, "onPostResponse: Loyalty card added succesfully");
+                    }
+
+                    @Override
+                    public void onFailure(Call<LoyaltyCard> call, Throwable t) {
+                        Log.d(TAG, "onPostFailure: Error on adding loyaltycard");
+                    }
+                });
+    }
+
+    public void deleteLoyaltyCard(String userID, String token){
+        loyaltyCardsService.deleteLoyaltyCard(userID, token)
+                .enqueue(new Callback<LoyaltyCard>() {
+                    @Override
+                    public void onResponse(Call<LoyaltyCard> call, Response<LoyaltyCard> response) {
+                        Log.d(TAG, "onDeleteResponse: Card deleted succesfully");
+                    }
+
+                    @Override
+                    public void onFailure(Call<LoyaltyCard> call, Throwable t) {
+                        Log.d(TAG, "onDeleteFailure: Error");
                     }
                 });
     }

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,12 +22,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.lgorczynski.shopassist.R;
+import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +42,7 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
 
     private static final String TAG = "LoyaltyCardFormFragment";
     private NavController navController;
+    private LoyaltyCardsViewModel loyaltyCardsViewModel;
 
     private int REQUEST_PICK_PHOTO = 100;
     private int REQUEST_CAPTURE = 101;
@@ -46,22 +50,31 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
     private ImageView cardImage;
     private String capturedPhotoPath;
     private String selectedPhotoPath;
+    private String currentPhotoPath;
+
+    private String barcodeFormat;
+    private String barcodeContent;
+
+    private EditText titleEditText;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        loyaltyCardsViewModel =
+                ViewModelProviders.of(this).get(LoyaltyCardsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_loyalty_card_form, container, false);
 
         final ImageView barcodeImage = root.findViewById(R.id.loyalty_card_form_barcode);
         final TextView contentText = root.findViewById(R.id.loyalty_card_form_text);
         cardImage = root.findViewById(R.id.loyalty_card_form_card_image);
 
-        String content = getArguments().getString("content");
-        contentText.setText(content);
-        BarcodeFormat format = BarcodeFormat.valueOf(getArguments().getString("format"));
+        barcodeContent = getArguments().getString("content");
+        contentText.setText(barcodeContent);
+        barcodeFormat = getArguments().getString("format");
+        BarcodeFormat format = BarcodeFormat.valueOf(barcodeFormat);
         BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
         try {
-            Bitmap bitmap = barcodeEncoder.encodeBitmap(content, format, 800, 400);
+            Bitmap bitmap = barcodeEncoder.encodeBitmap(barcodeContent, format, 800, 400);
             barcodeImage.setImageBitmap(bitmap);
         }
         catch(Exception e) {
@@ -71,6 +84,7 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
         final Button cameraButton = root.findViewById(R.id.loyalty_card_form_from_camera_button);
         final Button galleryButton = root.findViewById(R.id.loyalty_card_form_from_gallery_button);
         final Button submitButton = root.findViewById(R.id.loyalty_card_form_submit_button);
+        titleEditText = root.findViewById(R.id.loyalty_card_form_title_edit_text);
         cameraButton.setOnClickListener(this);
         galleryButton.setOnClickListener(this);
         submitButton.setOnClickListener(this);
@@ -113,8 +127,17 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
                 }
                 break;
             }
-            case R.id.loyalty_card_form_submit_button:{
-                Toast.makeText(getContext(), "Added loyalty card correctly", Toast.LENGTH_SHORT).show();
+            case R.id.loyalty_card_form_submit_button: {
+//                Toast.makeText(getContext(), "Added loyalty card correctly", Toast.LENGTH_SHORT).show();
+                String title = titleEditText.getText().toString();
+                try {
+                    File image = new File(currentPhotoPath);
+                    loyaltyCardsViewModel.postLoyaltyCard(title, barcodeFormat, barcodeContent, image, CredentialsSingleton.getInstance().getToken());
+                }
+                catch(Exception e) {
+                    loyaltyCardsViewModel.postLoyaltyCard(title, barcodeFormat, barcodeContent, CredentialsSingleton.getInstance().getToken());
+                }
+
                 navController.popBackStack();
                 break;
             }
@@ -131,6 +154,7 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
             selectedPhotoPath = imagePath;
+            currentPhotoPath = imagePath;
 
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -141,6 +165,7 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
         if(requestCode == REQUEST_CAPTURE && resultCode == RESULT_OK){
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            currentPhotoPath = capturedPhotoPath;
             Bitmap bitmap = BitmapFactory.decodeFile(capturedPhotoPath, options);
             cardImage.setImageBitmap(bitmap);
         }

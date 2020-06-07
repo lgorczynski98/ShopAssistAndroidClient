@@ -1,5 +1,6 @@
 package com.lgorczynski.shopassist.ui.loyalty_cards;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 
@@ -11,6 +12,7 @@ import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,18 @@ public class LoyaltyCardsViewModel extends ViewModel {
 
     public void getLoyaltyCards(String token){
         loyaltyCardsRepository.getLoyaltyCards(token);
+    }
+
+    public void postLoyaltyCard(String title, String barcode_format, String barcode_content, File image, String token){
+        loyaltyCardsRepository.postLoyaltyCard(title, barcode_format, barcode_content, image, token);
+    }
+
+    public void postLoyaltyCard(String title, String barcode_format, String barcode_content, String token){
+        loyaltyCardsRepository.postLoyaltyCard(title, barcode_format, barcode_content, token);
+    }
+
+    public void deleteLoyaltyCard(String userID, String token){
+        loyaltyCardsRepository.deleteLoyaltyCard(userID, token);
     }
 
     public LiveData<List<LoyaltyCard>> getLoyaltyCardsResponseLiveData(){
