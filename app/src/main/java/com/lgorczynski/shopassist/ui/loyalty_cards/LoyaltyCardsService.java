@@ -11,6 +11,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
@@ -42,9 +43,34 @@ public interface LoyaltyCardsService {
             @Header("Authorization") String token
     );
 
-    @DELETE("loyaltycards/{user_id}/")
+    @DELETE("loyaltycards/{card_id}/")
     Call<LoyaltyCard> deleteLoyaltyCard(
-            @Path(value = "user_id", encoded = true) String userID,
+            @Path(value = "card_id", encoded = true) int cardID,
+            @Header("Authorization") String token
+    );
+
+    @FormUrlEncoded
+    @PATCH("loyaltycards/{card_id}/")
+    Call<LoyaltyCard> patchLoyaltyCard(
+            @Path(value = "card_id", encoded = true) int cardID,
+            @Field("title") String title,
+            @Header("Authorization") String token
+    );
+
+    @Multipart
+    @PATCH("loyaltycards/{card_id}/")
+    Call<LoyaltyCard> patchLoyaltyCard(
+            @Path(value = "card_id", encoded = true) int cardID,
+            @Part() MultipartBody.Part image,
+            @Header("Authorization") String token
+    );
+
+    @Multipart
+    @PATCH("loyaltycards/{card_id}/")
+    Call<LoyaltyCard> patchLoyaltyCard(
+            @Path(value = "card_id", encoded = true) int cardID,
+            @Part("title") RequestBody title,
+            @Part() MultipartBody.Part image,
             @Header("Authorization") String token
     );
 

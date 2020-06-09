@@ -41,8 +41,8 @@ import static android.app.Activity.RESULT_OK;
 public class LoyaltyCardFormFragment extends Fragment implements View.OnClickListener{
 
     private static final String TAG = "LoyaltyCardFormFragment";
-    private NavController navController;
-    private LoyaltyCardsViewModel loyaltyCardsViewModel;
+    protected NavController navController;
+    protected LoyaltyCardsViewModel loyaltyCardsViewModel;
 
     private int REQUEST_PICK_PHOTO = 100;
     private int REQUEST_CAPTURE = 101;
@@ -50,12 +50,12 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
     private ImageView cardImage;
     private String capturedPhotoPath;
     private String selectedPhotoPath;
-    private String currentPhotoPath;
+    protected String currentPhotoPath;
 
     private String barcodeFormat;
     private String barcodeContent;
 
-    private EditText titleEditText;
+    protected EditText titleEditText;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

@@ -60,7 +60,6 @@ public class LoyaltyCardsRepository {
     public void postLoyaltyCard(String title, String barcode_format, String barcode_content, File image, String token){
         RequestBody requestFile = RequestBody.create(image, MediaType.parse("multipart/form-data"));
         MultipartBody.Part imageBody = MultipartBody.Part.createFormData("image", image.getName(), requestFile);
-
         RequestBody requestTitle = RequestBody.create(title, MediaType.parse("multipart/form-data"));
         RequestBody requestBarcodeFormat = RequestBody.create(barcode_format, MediaType.parse("multipart/form-data"));
         RequestBody requestBarcodeContent = RequestBody.create(barcode_content, MediaType.parse("multipart/form-data"));
@@ -94,8 +93,8 @@ public class LoyaltyCardsRepository {
                 });
     }
 
-    public void deleteLoyaltyCard(String userID, String token){
-        loyaltyCardsService.deleteLoyaltyCard(userID, token)
+    public void deleteLoyaltyCard(int cardID, String token){
+        loyaltyCardsService.deleteLoyaltyCard(cardID, token)
                 .enqueue(new Callback<LoyaltyCard>() {
                     @Override
                     public void onResponse(Call<LoyaltyCard> call, Response<LoyaltyCard> response) {
@@ -105,6 +104,58 @@ public class LoyaltyCardsRepository {
                     @Override
                     public void onFailure(Call<LoyaltyCard> call, Throwable t) {
                         Log.d(TAG, "onDeleteFailure: Error");
+                    }
+                });
+    }
+
+    public void patchLoyaltyCard(int cardID, String title, String token){
+        loyaltyCardsService.patchLoyaltyCard(cardID, title, token)
+                .enqueue(new Callback<LoyaltyCard>() {
+                    @Override
+                    public void onResponse(Call<LoyaltyCard> call, Response<LoyaltyCard> response) {
+                        Log.d(TAG, "onPatchResponse: Updated succesfully");
+                    }
+
+                    @Override
+                    public void onFailure(Call<LoyaltyCard> call, Throwable t) {
+                        Log.d(TAG, "onPatchFailure: Error on updating");
+                    }
+                });
+    }
+
+    public void patchLoyaltyCard(int cardID, File image, String token){
+        RequestBody requestFile = RequestBody.create(image, MediaType.parse("multipart/form-data"));
+        MultipartBody.Part imageBody = MultipartBody.Part.createFormData("image", image.getName(), requestFile);
+
+        loyaltyCardsService.patchLoyaltyCard(cardID, imageBody, token)
+                .enqueue(new Callback<LoyaltyCard>() {
+                    @Override
+                    public void onResponse(Call<LoyaltyCard> call, Response<LoyaltyCard> response) {
+                        Log.d(TAG, "onPatchResponse: Updated succesfully");
+                    }
+
+                    @Override
+                    public void onFailure(Call<LoyaltyCard> call, Throwable t) {
+                        Log.d(TAG, "onPatchFailure: Error on updating");
+                    }
+                });
+    }
+
+    public void patchLoyaltyCard(int cardID, String title, File image, String token){
+        RequestBody requestFile = RequestBody.create(image, MediaType.parse("multipart/form-data"));
+        MultipartBody.Part imageBody = MultipartBody.Part.createFormData("image", image.getName(), requestFile);
+        RequestBody requestTitle = RequestBody.create(title, MediaType.parse("multipart/form-data"));
+
+        loyaltyCardsService.patchLoyaltyCard(cardID, requestTitle, imageBody, token)
+                .enqueue(new Callback<LoyaltyCard>() {
+                    @Override
+                    public void onResponse(Call<LoyaltyCard> call, Response<LoyaltyCard> response) {
+                        Log.d(TAG, "onPatchResponse: Updated succesfully");
+                    }
+
+                    @Override
+                    public void onFailure(Call<LoyaltyCard> call, Throwable t) {
+                        Log.d(TAG, "onPatchFailure: Error on updating");
                     }
                 });
     }

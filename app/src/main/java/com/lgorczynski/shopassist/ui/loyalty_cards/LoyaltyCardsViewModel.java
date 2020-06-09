@@ -39,35 +39,23 @@ public class LoyaltyCardsViewModel extends ViewModel {
         loyaltyCardsRepository.postLoyaltyCard(title, barcode_format, barcode_content, token);
     }
 
-    public void deleteLoyaltyCard(String userID, String token){
-        loyaltyCardsRepository.deleteLoyaltyCard(userID, token);
+    public void deleteLoyaltyCard(int cardID, String token){
+        loyaltyCardsRepository.deleteLoyaltyCard(cardID, token);
     }
 
     public LiveData<List<LoyaltyCard>> getLoyaltyCardsResponseLiveData(){
         return loyaltyCardsResponseLiveData;
     }
 
-//    public LoyaltyCardsViewModel() {
-//        mText = new MutableLiveData<>();
-//        mText.setValue("This is loyalty cards fragment");
-//
-//        List<LoyaltyCard> exampleLoyaltyCards = new ArrayList<>();
-//        exampleLoyaltyCards.add(new LoyaltyCard("Biedronka", "https://galeriamlociny.pl/app/uploads/wayfinder/url_logo/3039.png", "UPC_A", "72527273070"));
-//        exampleLoyaltyCards.add(new LoyaltyCard("Lidl", "https://pliki.portalspozywczy.pl/i/10/69/80/106980_r0_940.jpg", "UPC_A", "72527273070"));
-//        exampleLoyaltyCards.add(new LoyaltyCard("Kaufland", "https://www.kaufland.pl/etc.clientlibs/kaufland/clientlibs/clientlib-site/resources/frontend/img/opengraph_image_default-581151e556.png", "UPC_A", "72527273070"));
-//        exampleLoyaltyCards.add(new LoyaltyCard("Stokrotka", "https://www.lublinplaza.pl/_cache/shops/510-255/fill/stokrotka.png", "UPC_A", "72527273070"));
-//        exampleLoyaltyCards.add(new LoyaltyCard("Biedronka", "https://galeriamlociny.pl/app/uploads/wayfinder/url_logo/3039.png", "UPC_A", "72527273070"));
-//        exampleLoyaltyCards.add(new LoyaltyCard("Lidl", "https://pliki.portalspozywczy.pl/i/10/69/80/106980_r0_940.jpg", "UPC_A", "72527273070"));
-//        exampleLoyaltyCards.add(new LoyaltyCard("Kaufland", "https://www.kaufland.pl/etc.clientlibs/kaufland/clientlibs/clientlib-site/resources/frontend/img/opengraph_image_default-581151e556.png", "UPC_A", "72527273070"));
-//        exampleLoyaltyCards.add(new LoyaltyCard("Stokrotka", "https://www.lublinplaza.pl/_cache/shops/510-255/fill/stokrotka.png", "UPC_A", "72527273070"));
-//        exampleLoyaltyCards.add(new LoyaltyCard("Biedronka", "https://galeriamlociny.pl/app/uploads/wayfinder/url_logo/3039.png", "UPC_A", "72527273070"));
-//        exampleLoyaltyCards.add(new LoyaltyCard("Lidl", "https://pliki.portalspozywczy.pl/i/10/69/80/106980_r0_940.jpg", "UPC_A", "72527273070"));
-//        exampleLoyaltyCards.add(new LoyaltyCard("Kaufland", "https://www.kaufland.pl/etc.clientlibs/kaufland/clientlibs/clientlib-site/resources/frontend/img/opengraph_image_default-581151e556.png", "UPC_A", "72527273070"));
-//        exampleLoyaltyCards.add(new LoyaltyCard("Stokrotka", "https://www.lublinplaza.pl/_cache/shops/510-255/fill/stokrotka.png", "UPC_A", "72527273070"));
-//
-//        mLoyaltyCards = new MutableLiveData<>();
-//        mLoyaltyCards.setValue(exampleLoyaltyCards);
-//    }
+    public void patchLoyaltyCard(int cardID, String title, String token){
+        loyaltyCardsRepository.patchLoyaltyCard(cardID, title, token);
+    }
 
+    public void patchLoyaltyCard(int cardID, File image, String token){
+        loyaltyCardsRepository.patchLoyaltyCard(cardID, image, token);
+    }
 
+    public void patchLoyaltyCard(int cardID, String title, File image, String token){
+        loyaltyCardsRepository.patchLoyaltyCard(cardID, title, image, token);
+    }
 }

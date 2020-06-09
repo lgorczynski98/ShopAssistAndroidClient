@@ -161,6 +161,7 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
         share.setOnClickListener(this);
         edit.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
+            bundle.putInt("id", card.getId());
             bundle.putString("content", card.getContent());
             bundle.putString("format", card.getFormat());
             bundle.putString("title", card.getTitle());
@@ -169,7 +170,7 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
             bottomSheetDialog.cancel();
         });
         delete.setOnClickListener(view -> {
-            loyaltyCardsViewModel.deleteLoyaltyCard(String.valueOf(card.getId()), CredentialsSingleton.getInstance().getToken());
+            loyaltyCardsViewModel.deleteLoyaltyCard(card.getId(), CredentialsSingleton.getInstance().getToken());
             bottomSheetDialog.cancel();
         });
 
