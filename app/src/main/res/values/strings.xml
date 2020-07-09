@@ -36,4 +36,6 @@
     <string name="quantity">Quantity</string>
     <string name="return_text">Return</string>
     <string name="warranty">Warranty</string>
+    <string name="preference_token">com.lgorczynski.shopassist.log_in.token</string>
+    <string name="token">Token</string>
 </resources>

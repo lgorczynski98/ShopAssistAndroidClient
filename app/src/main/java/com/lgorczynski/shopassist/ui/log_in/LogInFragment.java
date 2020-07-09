@@ -4,7 +4,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -53,6 +55,10 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         CredentialsSingleton.getInstance().setToken("Token " + loginResponse.getToken());
+                        SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_token), Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString(getString(R.string.token), CredentialsSingleton.getInstance().getToken());
+                        editor.apply();
                         navController.navigate(R.id.action_logInFragment_to_navigation_home);
                     }
                 });
@@ -66,6 +72,13 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_token), Context.MODE_PRIVATE);
+        String sharedPrefToken = sharedPreferences.getString(getString(R.string.token), null);
+        if(sharedPrefToken != null){
+            CredentialsSingleton.getInstance().setToken(sharedPrefToken);
+            navController.navigate(R.id.action_logInFragment_to_navigation_home);
+        }
     }
 
     @Override

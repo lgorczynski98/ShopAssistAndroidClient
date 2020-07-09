@@ -1,5 +1,7 @@
 package com.lgorczynski.shopassist.ui.profile;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.lgorczynski.shopassist.R;
+import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener{
 
@@ -50,6 +53,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.profile_log_out_button:{
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_token), Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(getString(R.string.token), null);
+                editor.apply();
                 navController.navigate(R.id.action_navigation_profile_to_logInFragment);
                 break;
             }
