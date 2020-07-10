@@ -190,7 +190,8 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
     }
 
     private String getPurchaseDate(String receiptText){
-        String pattern = "(0[1-9]|[1-2][0-9]|3[0-1])\\-(0[1-9]|1[0-2])\\-([1-2][0-9]{3})";
+//        String pattern = "((0[1-9])|([1-2][0-9])|(3[0-1]))\\-((0[1-9])|(1[0-2]))\\-([1-2][0-9]{3})";      //10-07-2020
+        String pattern = "([1-2][0-9]{3})\\-((0[1-9])|(1[0-2]))\\-((0[1-9])|([1-2][0-9])|(3[0-1]))";        //2020-07-10
         Pattern regex = Pattern.compile(pattern);
         Matcher matcher = regex.matcher(receiptText);
         String purchaseDate = "";

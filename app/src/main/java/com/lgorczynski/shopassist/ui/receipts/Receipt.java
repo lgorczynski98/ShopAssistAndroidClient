@@ -3,6 +3,9 @@ package com.lgorczynski.shopassist.ui.receipts;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -13,17 +16,44 @@ public class Receipt implements Serializable {
 
     private static final String TAG = "Receipt";
 
+    @SerializedName("id")
+    @Expose
     private int id;
+
+    @SerializedName("title")
+    @Expose
     private String title;
+
+    @SerializedName("shop_name")
+    @Expose
     private String shopName;
+
+    @SerializedName("purchase_date")
+    @Expose
     private String purchaseDate;
+
+    @SerializedName("weeks_to_return")
+    @Expose
+    private int returnWeeks;
+
+    @SerializedName("months_of_warranty")
+    @Expose
+    private int warrantyMonths;
+
+    @SerializedName("thumbnail")
+    @Expose
+    private String imageUrl;
+
+    @SerializedName("image")
+    @Expose
+    private String receiptUrl;
+
+    @SerializedName("purchase_cost")
+    @Expose
+    private float price;
+
     private String returnDate;
     private String warrantyEndDate;
-    private int returnWeeks;
-    private int warrantyMonths;
-    private String imageUrl;
-    private String receiptUrl;
-    private float price;
 
     public Receipt(String title, String shopName, String purchaseDate, int returnWeeks, int warrantyMonths, float price, String imageUrl, String receiptUrl) {
         this.title = title;
@@ -34,25 +64,6 @@ public class Receipt implements Serializable {
         this.returnWeeks = returnWeeks;
         this.warrantyMonths = warrantyMonths;
         this.receiptUrl = receiptUrl;
-
-        try {
-            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-            Date date = dateFormat.parse(purchaseDate);
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            calendar.add(Calendar.WEEK_OF_YEAR, returnWeeks);
-            returnDate = dateFormat.format(calendar.getTime());
-
-            calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            calendar.add(Calendar.MONTH, warrantyMonths);
-            warrantyEndDate = dateFormat.format(calendar.getTime());
-        }
-        catch(Exception e) {
-            Log.d(TAG, "Receipt: Wrong date parsing!");
-        }
-
     }
 
     public int getId(){
@@ -80,10 +91,36 @@ public class Receipt implements Serializable {
     }
 
     public String getReturnDate() {
+        if(returnDate == null){
+            try {
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = dateFormat.parse(purchaseDate);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                calendar.add(Calendar.WEEK_OF_YEAR, returnWeeks);
+                returnDate = dateFormat.format(calendar.getTime());
+            }
+            catch(Exception e) {
+                Log.d(TAG, "getReturnDate: Wrong return date parsing");
+            }
+        }
         return returnDate;
     }
 
     public String getWarrantyEndDate() {
+        if(warrantyEndDate == null){
+            try {
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = dateFormat.parse(purchaseDate);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                calendar.add(Calendar.MONTH, warrantyMonths);
+                warrantyEndDate = dateFormat.format(calendar.getTime());
+            }
+            catch(Exception e) {
+                Log.d(TAG, "getReturnDate: Wrong warranty end date parsing");
+            }
+        }
         return warrantyEndDate;
     }
 
@@ -97,5 +134,41 @@ public class Receipt implements Serializable {
 
     public String getReceiptUrl() {
         return receiptUrl;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    public void setPurchaseDate(String purchaseDate) {
+        this.purchaseDate = purchaseDate;
+    }
+
+    public void setReturnWeeks(int returnWeeks) {
+        this.returnWeeks = returnWeeks;
+    }
+
+    public void setWarrantyMonths(int warrantyMonths) {
+        this.warrantyMonths = warrantyMonths;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setReceiptUrl(String receiptUrl) {
+        this.receiptUrl = receiptUrl;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
     }
 }

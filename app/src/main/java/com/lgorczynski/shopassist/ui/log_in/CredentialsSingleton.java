@@ -4,7 +4,7 @@ public class CredentialsSingleton {
 
     private static CredentialsSingleton instance = null;
     private String token;
-    public static final String BASE_URL = "http://192.168.1.2:8000/";
+    public static final String BASE_URL = "http://192.168.1.50:8000/";
 
     private CredentialsSingleton(){
 

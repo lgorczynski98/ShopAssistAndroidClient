@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ReceiptScannerActivity;
+import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
 
 import java.io.File;
 import java.util.List;
@@ -47,16 +48,9 @@ public class ReceiptsFragment extends Fragment implements ReceiptRecyclerViewAda
         receiptsViewModel =
                 ViewModelProviders.of(this).get(ReceiptsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_receipts, container, false);
-        final TextView textView = root.findViewById(R.id.text_dashboard);
-        receiptsViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
 
         recyclerView = root.findViewById(R.id.receipt_recycler_view);
-        receiptsViewModel.getReceipts().observe(this, new Observer<List<Receipt>>() {
+        receiptsViewModel.getReceiptsResponseLiveData().observe(this, new Observer<List<Receipt>>() {
             @Override
             public void onChanged(List<Receipt> receipts) {
                 adapter = new ReceiptRecyclerViewAdapter(getContext(), receipts, ReceiptsFragment.this);
@@ -64,6 +58,8 @@ public class ReceiptsFragment extends Fragment implements ReceiptRecyclerViewAda
                 recyclerView.setAdapter(adapter);
             }
         });
+
+        receiptsViewModel.getReceipts(CredentialsSingleton.getInstance().getToken());
 
         FloatingActionButton fab = root.findViewById(R.id.receipt_fab);
         fab.setOnClickListener(v -> startScanningReceipt());

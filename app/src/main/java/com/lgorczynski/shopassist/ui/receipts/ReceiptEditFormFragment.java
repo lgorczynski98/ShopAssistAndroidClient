@@ -43,12 +43,12 @@ public class ReceiptEditFormFragment extends ReceiptFormFragment {
         final TextView warrantyTextView = root.findViewById(R.id.receipt_form_warranty_text_view);
         final SeekBar returnSeekBar = root.findViewById(R.id.receipt_form_return_seek_bar);
         final SeekBar warrantySeekBar = root.findViewById(R.id.receipt_form_warranty_seek_bar);
-        returnSeekBar.setProgress(2);
-        String setText = "Return (2 weeks)";
+        returnSeekBar.setProgress(receipt.getReturnWeeks());
+        String setText = "Return (" + receipt.getReturnWeeks()  + " weeks)";
         returnTextView.setText(setText);
-        setText = "Warranty (24 months)";
+        setText = "Warranty (" + receipt.getWarrantyMonths() + " months)";
         warrantyTextView.setText(setText);
-        warrantySeekBar.setProgress(24);
+        warrantySeekBar.setProgress(receipt.getWarrantyMonths());
         returnSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
