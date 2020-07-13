@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +28,7 @@ import androidx.navigation.Navigation;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.lgorczynski.shopassist.R;
-import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
+import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 
 import java.io.File;
 import java.io.IOException;
@@ -128,7 +127,6 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
                 break;
             }
             case R.id.loyalty_card_form_submit_button: {
-//                Toast.makeText(getContext(), "Added loyalty card correctly", Toast.LENGTH_SHORT).show();
                 String title = titleEditText.getText().toString();
                 try {
                     File image = new File(currentPhotoPath);

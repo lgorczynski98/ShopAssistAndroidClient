@@ -1,8 +1,7 @@
-package com.lgorczynski.shopassist.ui.loyalty_cards;
+package com.lgorczynski.shopassist.ui;
 
 import android.content.Context;
 
-import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -15,7 +14,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class LoyaltyCardsPicasso {
+public class CustomPicasso {
 
     private static OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
         @NotNull
@@ -30,7 +29,7 @@ public class LoyaltyCardsPicasso {
 
     private Picasso picasso;
 
-    public LoyaltyCardsPicasso(Context mContext){
+    public CustomPicasso(Context mContext){
         picasso = new Picasso.Builder(mContext).downloader(new OkHttp3Downloader(client)).build();
     }
 

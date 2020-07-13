@@ -11,7 +11,8 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 
 import com.lgorczynski.shopassist.R;
-import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
+import com.lgorczynski.shopassist.ui.CustomPicasso;
+import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -31,8 +32,8 @@ public class LoyaltyCardEditFormFragment extends LoyaltyCardFormFragment {
         editText.setText(title);
 
         final ImageView image = root.findViewById(R.id.loyalty_card_form_card_image);
-        LoyaltyCardsPicasso loyaltyCardsPicasso = new LoyaltyCardsPicasso(getContext());
-        Picasso picasso = loyaltyCardsPicasso.getPicasso();
+        CustomPicasso customPicasso = new CustomPicasso(getContext());
+        Picasso picasso = customPicasso.getPicasso();
         picasso.load(imageUrl).into(image);
 
         final Button submitButton = root.findViewById(R.id.loyalty_card_form_submit_button);

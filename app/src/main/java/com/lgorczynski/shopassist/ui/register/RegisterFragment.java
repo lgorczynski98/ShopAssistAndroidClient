@@ -20,7 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.lgorczynski.shopassist.R;
-import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
+import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 import com.lgorczynski.shopassist.ui.log_in.LoginResponse;
 
 public class RegisterFragment extends Fragment implements View.OnClickListener {

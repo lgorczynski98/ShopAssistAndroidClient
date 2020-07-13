@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.lgorczynski.shopassist.R;
+import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 
 public class LogInFragment extends Fragment implements View.OnClickListener {
 

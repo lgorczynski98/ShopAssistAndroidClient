@@ -38,4 +38,9 @@
     <string name="warranty">Warranty</string>
     <string name="preference_token">com.lgorczynski.shopassist.log_in.token</string>
     <string name="token">Token</string>
+    <string name="title">Title</string>
+    <string name="shop_name">Shop</string>
+    <string name="purchase_date">Purchase Date</string>
+    <string name="purchase_cost">Purchase Cost</string>
+    <string name="return_to">Return to</string>
 </resources>

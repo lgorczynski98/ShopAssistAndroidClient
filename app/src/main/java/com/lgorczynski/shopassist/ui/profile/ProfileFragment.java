@@ -16,7 +16,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.lgorczynski.shopassist.R;
-import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener{
 

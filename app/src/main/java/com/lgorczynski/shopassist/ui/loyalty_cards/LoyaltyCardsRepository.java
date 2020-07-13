@@ -1,13 +1,11 @@
 package com.lgorczynski.shopassist.ui.loyalty_cards;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
+import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 
 import java.io.File;
 import java.util.List;

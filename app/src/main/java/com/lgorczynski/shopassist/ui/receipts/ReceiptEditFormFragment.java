@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.lgorczynski.shopassist.R;
+import com.lgorczynski.shopassist.ui.CredentialsSingleton;
+import com.lgorczynski.shopassist.ui.CustomPicasso;
 import com.squareup.picasso.Picasso;
 
 public class ReceiptEditFormFragment extends ReceiptFormFragment {
@@ -23,26 +25,29 @@ public class ReceiptEditFormFragment extends ReceiptFormFragment {
 
         Receipt receipt = (Receipt)getArguments().getSerializable("receipt");
 
-        final EditText title = root.findViewById(R.id.receipt_form_title);
-        final EditText shopName = root.findViewById(R.id.receipt_form_shop_name);
-        final EditText purchaseDate = root.findViewById(R.id.receipt_form_date);
-        final EditText price = root.findViewById(R.id.receipt_form_cost);
+        title = root.findViewById(R.id.receipt_form_title);
+        shopName = root.findViewById(R.id.receipt_form_shop_name);
+        purchaseDate = root.findViewById(R.id.receipt_form_date);
+        price = root.findViewById(R.id.receipt_form_cost);
         final ImageView receiptImage = root.findViewById(R.id.receipt_form_receipt_image);
         image = root.findViewById(R.id.receipt_form_image);
 
         title.setText(receipt.getTitle());
         shopName.setText(receipt.getShopName());
         purchaseDate.setText(receipt.getPurchaseDate());
+        purchaseDate.setOnClickListener(this);
         price.setText(String.valueOf(receipt.getPrice()));
 
-        Picasso.get().load(receipt.getReceiptUrl()).into(receiptImage);
-        Picasso.get().load(receipt.getImageUrl()).into(image);
+        CustomPicasso customPicasso = new CustomPicasso(getContext());
+        Picasso picasso = customPicasso.getPicasso();
+        picasso.load(CredentialsSingleton.RECEIPTS_IMAGE_BASE_URL + receipt.getId() + "/").into(receiptImage);
+        picasso.load(CredentialsSingleton.RECEIPTS_THUMBNAIL_BASE_URL + receipt.getId() + "/").into(image);
 
-        final Button submit = root.findViewById(R.id.receipt_form_submit);
-        final TextView returnTextView = root.findViewById(R.id.receipt_form_return_text_view);
-        final TextView warrantyTextView = root.findViewById(R.id.receipt_form_warranty_text_view);
-        final SeekBar returnSeekBar = root.findViewById(R.id.receipt_form_return_seek_bar);
-        final SeekBar warrantySeekBar = root.findViewById(R.id.receipt_form_warranty_seek_bar);
+        submit = root.findViewById(R.id.receipt_form_submit);
+        returnTextView = root.findViewById(R.id.receipt_form_return_text_view);
+        warrantyTextView = root.findViewById(R.id.receipt_form_warranty_text_view);
+        returnSeekBar = root.findViewById(R.id.receipt_form_return_seek_bar);
+        warrantySeekBar = root.findViewById(R.id.receipt_form_warranty_seek_bar);
         returnSeekBar.setProgress(receipt.getReturnWeeks());
         String setText = "Return (" + receipt.getReturnWeeks()  + " weeks)";
         returnTextView.setText(setText);

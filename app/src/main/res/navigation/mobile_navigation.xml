@@ -41,6 +41,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_navigation_receipts_to_receiptEditFormFragment"
+            app:destination="@id/receiptEditFormFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -150,15 +157,7 @@
         android:id="@+id/receiptPreviewFragment"
         android:name="com.lgorczynski.shopassist.ui.receipts.ReceiptPreviewFragment"
         android:label="fragment_receipt_form"
-        tools:layout="@layout/fragment_receipt_form" >
-        <action
-            android:id="@+id/action_receiptPreviewFragment_to_receiptEditFormFragment"
-            app:destination="@id/receiptEditFormFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-    </fragment>
+        tools:layout="@layout/fragment_receipt_form" />
     <fragment
         android:id="@+id/receiptEditFormFragment"
         android:name="com.lgorczynski.shopassist.ui.receipts.ReceiptEditFormFragment"

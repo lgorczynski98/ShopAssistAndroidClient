@@ -1,10 +1,10 @@
 package com.lgorczynski.shopassist.ui.receipts;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -23,43 +24,53 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.text.Line;
-import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import com.lgorczynski.shopassist.R;
+import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static android.app.Activity.RESULT_OK;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
-public class ReceiptFormFragment extends Fragment implements View.OnClickListener {
+public class ReceiptFormFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
     private NavController navController;
     private File imageFile;
+    protected ReceiptsViewModel receiptsViewModel;
 
     protected ImageView image;
     private String capturedPhotoPath;
     private String selectedPhotoPath;
+    private String currentPhotoPath;
     private int REQUEST_PICK_PHOTO = 500;
     private int REQUEST_CAPTURE = 501;
+
+    protected EditText title;
+    protected EditText shopName;
+    protected EditText purchaseDate;
+    protected EditText price;
+    protected Button submit;
+    protected TextView returnTextView;
+    protected TextView warrantyTextView;
+    protected SeekBar returnSeekBar;
+    protected SeekBar warrantySeekBar;
+    protected DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -70,6 +81,8 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        receiptsViewModel =
+                ViewModelProviders.of(this).get(ReceiptsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_receipt_form, container, false);
 
         String imagePath = getArguments().getString("imagePath");
@@ -83,15 +96,16 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
         String receiptText = detectReceiptText(bitmap);
         text.setText(receiptText);
 
-        final EditText title = root.findViewById(R.id.receipt_form_title);
-        final EditText shopName = root.findViewById(R.id.receipt_form_shop_name);
-        final EditText purchaseDate = root.findViewById(R.id.receipt_form_date);
-        final EditText price = root.findViewById(R.id.receipt_form_cost);
-        final Button submit = root.findViewById(R.id.receipt_form_submit);
-        final TextView returnTextView = root.findViewById(R.id.receipt_form_return_text_view);
-        final TextView warrantyTextView = root.findViewById(R.id.receipt_form_warranty_text_view);
-        final SeekBar returnSeekBar = root.findViewById(R.id.receipt_form_return_seek_bar);
-        final SeekBar warrantySeekBar = root.findViewById(R.id.receipt_form_warranty_seek_bar);
+        title = root.findViewById(R.id.receipt_form_title);
+        shopName = root.findViewById(R.id.receipt_form_shop_name);
+        purchaseDate = root.findViewById(R.id.receipt_form_date);
+        purchaseDate.setOnClickListener(this);
+        price = root.findViewById(R.id.receipt_form_cost);
+        submit = root.findViewById(R.id.receipt_form_submit);
+        returnTextView = root.findViewById(R.id.receipt_form_return_text_view);
+        warrantyTextView = root.findViewById(R.id.receipt_form_warranty_text_view);
+        returnSeekBar = root.findViewById(R.id.receipt_form_return_seek_bar);
+        warrantySeekBar = root.findViewById(R.id.receipt_form_warranty_seek_bar);
         returnSeekBar.setProgress(2);
         String setText = "Return (2 weeks)";
         returnTextView.setText(setText);
@@ -223,13 +237,18 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.receipt_form_submit) {
-            Toast.makeText(getContext(), "Added receipt correctly", Toast.LENGTH_SHORT).show();
-            navController.popBackStack();
-        }
         switch(view.getId()){
+            case R.id.receipt_form_date:
+                showDatePickerDialog();
+                break;
             case R.id.receipt_form_submit:
-                Toast.makeText(getContext(), "Added receipt correctly", Toast.LENGTH_SHORT).show();
+                try {
+                    File thumbnail = new File(currentPhotoPath);
+                    receiptsViewModel.postReceipt(title.getText().toString(), shopName.getText().toString(), purchaseDate.getText().toString(), price.getText().toString(), returnSeekBar.getProgress(), warrantySeekBar.getProgress(), imageFile, thumbnail, CredentialsSingleton.getInstance().getToken());
+                }
+                catch(Exception e) {
+                    receiptsViewModel.postReceipt(title.getText().toString(), shopName.getText().toString(), purchaseDate.getText().toString(), price.getText().toString(), returnSeekBar.getProgress(), warrantySeekBar.getProgress(), imageFile, CredentialsSingleton.getInstance().getToken());
+                }
                 navController.popBackStack();
                 break;
             case R.id.receipt_form_from_camera_button:
@@ -258,6 +277,25 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    private void showDatePickerDialog(){
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                getContext(),
+                this,
+                Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        );
+        datePickerDialog.show();
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, dayOfMonth);
+        String date = dateFormat.format(calendar.getTime());
+        purchaseDate.setText(date);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -268,7 +306,7 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
             selectedPhotoPath = imagePath;
-
+            currentPhotoPath = imagePath;
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
@@ -278,6 +316,7 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
         if(requestCode == REQUEST_CAPTURE && resultCode == RESULT_OK){
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            currentPhotoPath = capturedPhotoPath;
             Bitmap bitmap = BitmapFactory.decodeFile(capturedPhotoPath, options);
             image.setImageBitmap(bitmap);
         }

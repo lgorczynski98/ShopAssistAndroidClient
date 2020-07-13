@@ -29,7 +29,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:ems="10"
-            android:hint="Title"
+            android:hint="@string/title"
             android:inputType="textPersonName" />
 
         <EditText
@@ -39,7 +39,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:ems="10"
-            android:hint="Shop Name"
+            android:hint="@string/shop_name"
             android:inputType="textPersonName" />
 
         <EditText
@@ -48,7 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:ems="10"
-            android:hint="Purchase Date"
+            android:focusable="false"
+            android:hint="@string/purchase_date"
             android:inputType="date" />
 
         <EditText
@@ -57,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:ems="10"
-            android:hint="Purchase Cost"
+            android:hint="@string/purchase_cost"
             android:inputType="number" />
 
         <TextView

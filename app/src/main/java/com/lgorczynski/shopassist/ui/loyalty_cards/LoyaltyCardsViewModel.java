@@ -1,19 +1,9 @@
 package com.lgorczynski.shopassist.ui.loyalty_cards;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.zxing.BarcodeFormat;
-import com.journeyapps.barcodescanner.BarcodeEncoder;
-import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
-
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class LoyaltyCardsViewModel extends ViewModel {

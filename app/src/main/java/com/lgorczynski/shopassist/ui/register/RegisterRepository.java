@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
+import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 import com.lgorczynski.shopassist.ui.log_in.LoginResponse;
 
 import retrofit2.Call;

@@ -2,12 +2,11 @@ package com.lgorczynski.shopassist.ui.receipts;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,15 +21,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ReceiptScannerActivity;
-import com.lgorczynski.shopassist.ui.log_in.CredentialsSingleton;
+import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 
-import java.io.File;
 import java.util.List;
-
-import javax.xml.transform.Result;
 
 public class ReceiptsFragment extends Fragment implements ReceiptRecyclerViewAdapter.OnReceiptClickListener{
 
@@ -102,5 +99,32 @@ public class ReceiptsFragment extends Fragment implements ReceiptRecyclerViewAda
         Bundle bundle = new Bundle();
         bundle.putSerializable("receipt", receipt);
         navController.navigate(R.id.action_navigation_receipts_to_receiptPreviewFragment, bundle);
+    }
+
+    @Override
+    public void onSettingsClick(int position) {
+        Receipt receipt = adapter.getItemOnPosition(position);
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+        bottomSheetDialog.setContentView(R.layout.receipts_settings_bottom_sheet_dialog);
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
+
+        final TextView title = bottomSheetDialog.findViewById(R.id.receipts_settings_bottom_sheet_dialog_title);
+        title.setText(receipt.getTitle());
+
+        final LinearLayout edit = bottomSheetDialog.findViewById(R.id.receipts_settings_bottom_sheet_dialog_edit_layout);
+        final LinearLayout delete = bottomSheetDialog.findViewById(R.id.receipts_settings_bottom_sheet_dialog_delete_layout);
+
+        edit.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("receipt", receipt);
+            navController.navigate(R.id.action_navigation_receipts_to_receiptEditFormFragment, bundle);
+            bottomSheetDialog.cancel();
+        });
+        delete.setOnClickListener(view -> {
+            receiptsViewModel.deleteReceipt(receipt.getId(), CredentialsSingleton.getInstance().getToken());
+            bottomSheetDialog.cancel();
+        });
+
+        bottomSheetDialog.show();
     }
 }

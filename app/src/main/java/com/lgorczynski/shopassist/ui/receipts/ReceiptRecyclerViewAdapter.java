@@ -5,15 +5,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lgorczynski.shopassist.R;
+import com.lgorczynski.shopassist.ui.CustomPicasso;
+import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -26,10 +28,13 @@ public class ReceiptRecyclerViewAdapter extends RecyclerView.Adapter<ReceiptRecy
     private Context mContext;
     private OnReceiptClickListener mOnReceiptClickListener;
 
+    private CustomPicasso customPicasso;
+
     public ReceiptRecyclerViewAdapter(Context mContext, List<Receipt> mReceipts, OnReceiptClickListener onReceiptClickListener) {
         this.mReceipts = mReceipts;
         this.mContext = mContext;
         this.mOnReceiptClickListener = onReceiptClickListener;
+        this.customPicasso = new CustomPicasso(mContext);
     }
 
     @NonNull
@@ -45,7 +50,10 @@ public class ReceiptRecyclerViewAdapter extends RecyclerView.Adapter<ReceiptRecy
         Log.d(TAG, "onBindViewHolder: called");
 
         final Receipt receipt = mReceipts.get(position);
-        Picasso.get().load(receipt.getImageUrl()).into(holder.image);
+
+        Picasso picasso = customPicasso.getPicasso();
+        picasso.load(CredentialsSingleton.RECEIPTS_THUMBNAIL_BASE_URL + receipt.getId() + "/").into(holder.image);
+
         holder.title.setText(receipt.getTitle());
         holder.price.setText(String.valueOf(receipt.getPrice()));
         holder.date.setText(receipt.getPurchaseDate());
@@ -66,6 +74,7 @@ public class ReceiptRecyclerViewAdapter extends RecyclerView.Adapter<ReceiptRecy
         TextView title;
         TextView price;
         TextView date;
+        Button setting;
         ConstraintLayout parentLayout;
         OnReceiptClickListener onReceiptClickListener;
 
@@ -76,18 +85,28 @@ public class ReceiptRecyclerViewAdapter extends RecyclerView.Adapter<ReceiptRecy
             title = itemView.findViewById(R.id.receipt_list_title);
             price = itemView.findViewById(R.id.receipt_list_price);
             date = itemView.findViewById(R.id.receipt_list_date);
+            setting = itemView.findViewById(R.id.receipt_list_setting_button);
             parentLayout = itemView.findViewById(R.id.receipt_parent_layout);
             this.onReceiptClickListener = onReceiptClickListener;
             parentLayout.setOnClickListener(this);
+            setting.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            onReceiptClickListener.onReceiptClick(getAdapterPosition());
+            switch(view.getId()){
+                case R.id.receipt_parent_layout:
+                    onReceiptClickListener.onReceiptClick(getAdapterPosition());
+                    break;
+                case R.id.receipt_list_setting_button:
+                    onReceiptClickListener.onSettingsClick(getAdapterPosition());
+                    break;
+            }
         }
     }
 
     public interface OnReceiptClickListener{
         void onReceiptClick(int position);
+        void onSettingsClick(int position);
     }
 }

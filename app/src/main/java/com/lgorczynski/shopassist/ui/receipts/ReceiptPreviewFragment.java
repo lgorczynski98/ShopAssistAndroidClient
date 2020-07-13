@@ -15,9 +15,11 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lgorczynski.shopassist.R;
+import com.lgorczynski.shopassist.ui.CredentialsSingleton;
+import com.lgorczynski.shopassist.ui.CustomPicasso;
 import com.squareup.picasso.Picasso;
 
-public class ReceiptPreviewFragment extends Fragment implements View.OnClickListener {
+public class ReceiptPreviewFragment extends Fragment{
 
     private Receipt receipt;
     private NavController navController;
@@ -42,8 +44,6 @@ public class ReceiptPreviewFragment extends Fragment implements View.OnClickList
         final TextView price = root.findViewById(R.id.receipt_preview_price);
         final TextView returnDate = root.findViewById(R.id.receipt_preview_return_date);
         final TextView warrantyDate = root.findViewById(R.id.receipt_preview_warranty_date);
-        final FloatingActionButton fab = root.findViewById(R.id.receipt_preview_edit_fab);
-        fab.setOnClickListener(this);
 
         title.setText(receipt.getTitle());
         shopName.setText(receipt.getShopName());
@@ -52,17 +52,10 @@ public class ReceiptPreviewFragment extends Fragment implements View.OnClickList
         returnDate.setText(receipt.getReturnDate());
         warrantyDate.setText(receipt.getWarrantyEndDate());
 
-        Picasso.get().load(receipt.getReceiptUrl()).into(imageView);
+        CustomPicasso customPicasso = new CustomPicasso(getContext());
+        Picasso picasso = customPicasso.getPicasso();
+        picasso.load(CredentialsSingleton.RECEIPTS_IMAGE_BASE_URL + receipt.getId() + "/").into(imageView);
 
         return root;
-    }
-
-    @Override
-    public void onClick(View view) {
-        if(view.getId() == R.id.receipt_preview_edit_fab){
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("receipt", receipt);
-            navController.navigate(R.id.action_receiptPreviewFragment_to_receiptEditFormFragment, bundle);
-        }
     }
 }
