@@ -18,6 +18,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static androidx.constraintlayout.widget.Constraints.TAG;
+
 public class ReceiptsRepository {
 
     private static final String RECEIPTS_SERVICE_BASE_URL = CredentialsSingleton.BASE_URL;
@@ -74,11 +76,19 @@ public class ReceiptsRepository {
                     @Override
                     public void onResponse(Call<Receipt> call, Response<Receipt> response) {
                         Log.d(TAG, "onPostResponse: Receipt added correctly");
+                        boolean deleted = thumbnail.delete();
+                        Log.d(TAG, "onResponce: Temp thumbnail file deleted: " + deleted);
+                        deleted = image.delete();
+                        Log.d(TAG, "onResponse: Receipt image file deleted: " + deleted);
                     }
 
                     @Override
                     public void onFailure(Call<Receipt> call, Throwable t) {
                         Log.d(TAG, "onPostFailure: Error on adding receipt");
+                        boolean deleted = thumbnail.delete();
+                        Log.d(TAG, "onResponce: Temp thumbnail file deleted: " + deleted);
+                        deleted = image.delete();
+                        Log.d(TAG, "onResponse: Receipt image file deleted: " + deleted);
                     }
                 });
     }
@@ -99,11 +109,15 @@ public class ReceiptsRepository {
                     @Override
                     public void onResponse(Call<Receipt> call, Response<Receipt> response) {
                         Log.d(TAG, "onPostResponse: Receipt added correctly");
+                        boolean deleted = image.delete();
+                        Log.d(TAG, "onResponse: Receipt image file deleted: " + deleted);
                     }
 
                     @Override
                     public void onFailure(Call<Receipt> call, Throwable t) {
                         Log.d(TAG, "onPostFailure: Error on adding receipt");
+                        boolean deleted = image.delete();
+                        Log.d(TAG, "onResponse: Receipt image file deleted: " + deleted);
                     }
                 });
     }

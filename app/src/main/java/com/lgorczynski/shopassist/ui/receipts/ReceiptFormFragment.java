@@ -35,9 +35,12 @@ import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
+import com.lgorczynski.shopassist.ui.ImageScaler;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -154,6 +157,7 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
         submit.setOnClickListener(this);
 
         price.setText(getPurchaseCost(receiptText));
+        price.addTextChangedListener(new PriceTextWatcher(price));
         purchaseDate.setText(getPurchaseDate(receiptText));
         shopName.setText(getShopName(receiptText));
 
@@ -219,8 +223,10 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
         Pattern regex = Pattern.compile(pattern);
         Matcher matcher = regex.matcher(receiptText);
         String price = "";
-        while(matcher.find())
+        while(matcher.find()){
             price = matcher.group(0);
+            price = price.replace(',', '.');
+        }
         return price;
     }
 
@@ -243,8 +249,9 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.receipt_form_submit:
                 try {
-                    File thumbnail = new File(currentPhotoPath);
-                    receiptsViewModel.postReceipt(title.getText().toString(), shopName.getText().toString(), purchaseDate.getText().toString(), price.getText().toString(), returnSeekBar.getProgress(), warrantySeekBar.getProgress(), imageFile, thumbnail, CredentialsSingleton.getInstance().getToken());
+                    File thumbnailFile = createTempThumbnailFile(ImageScaler.getScaledBitmap(currentPhotoPath, 200, 200));
+                    Log.d(TAG, "onClick: Temp thumbnail file created correclty");
+                    receiptsViewModel.postReceipt(title.getText().toString(), shopName.getText().toString(), purchaseDate.getText().toString(), price.getText().toString(), returnSeekBar.getProgress(), warrantySeekBar.getProgress(), imageFile, thumbnailFile, CredentialsSingleton.getInstance().getToken());
                 }
                 catch(Exception e) {
                     receiptsViewModel.postReceipt(title.getText().toString(), shopName.getText().toString(), purchaseDate.getText().toString(), price.getText().toString(), returnSeekBar.getProgress(), warrantySeekBar.getProgress(), imageFile, CredentialsSingleton.getInstance().getToken());
@@ -307,17 +314,13 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
             selectedPhotoPath = imagePath;
             currentPhotoPath = imagePath;
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
+            Bitmap bitmap = ImageScaler.getScaledBitmap(selectedPhotoPath, CredentialsSingleton.PREF_THUMBNAIL_WIDTH, CredentialsSingleton.PREF_THUMBNAIL_HEIGHT);
             image.setImageBitmap(bitmap);
             cursor.close();
         }
         if(requestCode == REQUEST_CAPTURE && resultCode == RESULT_OK){
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             currentPhotoPath = capturedPhotoPath;
-            Bitmap bitmap = BitmapFactory.decodeFile(capturedPhotoPath, options);
+            Bitmap bitmap = ImageScaler.getScaledBitmap(capturedPhotoPath, CredentialsSingleton.PREF_THUMBNAIL_WIDTH, CredentialsSingleton.PREF_THUMBNAIL_HEIGHT);
             image.setImageBitmap(bitmap);
         }
     }
@@ -330,5 +333,19 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
         capturedPhotoPath = image.getAbsolutePath();
         selectedPhotoPath = capturedPhotoPath;
         return image;
+    }
+
+    private File createTempThumbnailFile(Bitmap bitmap) throws IOException{
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timestamp + "_";
+        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File thumbnail = File.createTempFile(imageFileName, ".jpg", storageDir);
+        try (OutputStream out = new FileOutputStream(thumbnail)){
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+        }
+        catch (Exception e){
+            Log.d(TAG, "createTempThumbnailFile: failed on creating temporary thumbnail file");
+        }
+        return thumbnail;
     }
 }

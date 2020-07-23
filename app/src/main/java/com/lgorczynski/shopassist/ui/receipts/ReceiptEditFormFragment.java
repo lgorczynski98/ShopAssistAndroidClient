@@ -37,6 +37,7 @@ public class ReceiptEditFormFragment extends ReceiptFormFragment {
         purchaseDate.setText(receipt.getPurchaseDate());
         purchaseDate.setOnClickListener(this);
         price.setText(String.valueOf(receipt.getPrice()));
+        price.addTextChangedListener(new PriceTextWatcher(price));
 
         CustomPicasso customPicasso = new CustomPicasso(getContext());
         Picasso picasso = customPicasso.getPicasso();

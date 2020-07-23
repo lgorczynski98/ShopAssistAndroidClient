@@ -29,13 +29,17 @@ import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
+import com.lgorczynski.shopassist.ui.ImageScaler;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class LoyaltyCardFormFragment extends Fragment implements View.OnClickListener{
 
@@ -129,8 +133,9 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
             case R.id.loyalty_card_form_submit_button: {
                 String title = titleEditText.getText().toString();
                 try {
-                    File image = new File(currentPhotoPath);
-                    loyaltyCardsViewModel.postLoyaltyCard(title, barcodeFormat, barcodeContent, image, CredentialsSingleton.getInstance().getToken());
+                    File thumbnailFile = createTempThumbnailFile(ImageScaler.getScaledBitmap(currentPhotoPath, 200, 200));
+                    loyaltyCardsViewModel.postLoyaltyCard(title, barcodeFormat, barcodeContent, thumbnailFile, CredentialsSingleton.getInstance().getToken());
+                    Log.d(TAG, "onClick: Temp thumbnail file created correclty");
                 }
                 catch(Exception e) {
                     loyaltyCardsViewModel.postLoyaltyCard(title, barcodeFormat, barcodeContent, CredentialsSingleton.getInstance().getToken());
@@ -154,17 +159,13 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
             selectedPhotoPath = imagePath;
             currentPhotoPath = imagePath;
 
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
+            Bitmap bitmap = ImageScaler.getScaledBitmap(selectedPhotoPath, CredentialsSingleton.PREF_THUMBNAIL_WIDTH, CredentialsSingleton.PREF_THUMBNAIL_HEIGHT);
             cardImage.setImageBitmap(bitmap);
             cursor.close();
         }
         if(requestCode == REQUEST_CAPTURE && resultCode == RESULT_OK){
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             currentPhotoPath = capturedPhotoPath;
-            Bitmap bitmap = BitmapFactory.decodeFile(capturedPhotoPath, options);
+            Bitmap bitmap = ImageScaler.getScaledBitmap(capturedPhotoPath, CredentialsSingleton.PREF_THUMBNAIL_WIDTH, CredentialsSingleton.PREF_THUMBNAIL_HEIGHT);
             cardImage.setImageBitmap(bitmap);
         }
     }
@@ -177,5 +178,19 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
         capturedPhotoPath = image.getAbsolutePath();
         selectedPhotoPath = capturedPhotoPath;
         return image;
+    }
+
+    protected File createTempThumbnailFile(Bitmap bitmap) throws IOException{
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timestamp + "_";
+        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File thumbnail = File.createTempFile(imageFileName, ".jpg", storageDir);
+        try (OutputStream out = new FileOutputStream(thumbnail)){
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+        }
+        catch (Exception e){
+            Log.d(TAG, "createTempThumbnailFile: failed on creating temporary thumbnail file");
+        }
+        return thumbnail;
     }
 }

@@ -59,7 +59,7 @@
             android:layout_margin="10dp"
             android:ems="10"
             android:hint="@string/purchase_cost"
-            android:inputType="number" />
+            android:inputType="number|numberDecimal" />
 
         <TextView
             android:id="@+id/receipt_form_extracted_text_test"

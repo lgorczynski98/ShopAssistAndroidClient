@@ -1,6 +1,7 @@
 package com.lgorczynski.shopassist.ui.loyalty_cards;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,15 @@ import androidx.annotation.NonNull;
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ui.CustomPicasso;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
+import com.lgorczynski.shopassist.ui.ImageScaler;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 
 
 public class LoyaltyCardEditFormFragment extends LoyaltyCardFormFragment {
+
+    private static final String TAG = "LoyaltyCardEditFormFrag";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,8 +48,14 @@ public class LoyaltyCardEditFormFragment extends LoyaltyCardFormFragment {
             if(!titleEditText.getText().toString().equals(title))
                 titleChanged = true;
             if(currentPhotoPath != null){
-                imageChanged = true;
-                imageFile = new File(currentPhotoPath);
+                try {
+                    imageFile = createTempThumbnailFile(ImageScaler.getScaledBitmap(currentPhotoPath, 200, 200));
+                    Log.d(TAG, "onCreateView: Temp thumbnail file created correclty");
+                    imageChanged = true;
+                }
+                catch(Exception e) {
+                    imageChanged = false;
+                }
             }
             if(titleChanged && imageChanged)
                 loyaltyCardsViewModel.patchLoyaltyCard(cardID, titleEditText.getText().toString(), imageFile, CredentialsSingleton.getInstance().getToken());
@@ -53,6 +63,7 @@ public class LoyaltyCardEditFormFragment extends LoyaltyCardFormFragment {
                 loyaltyCardsViewModel.patchLoyaltyCard(cardID, titleEditText.getText().toString(), CredentialsSingleton.getInstance().getToken());
             else if(imageChanged)
                 loyaltyCardsViewModel.patchLoyaltyCard(cardID, imageFile, CredentialsSingleton.getInstance().getToken());
+
             navController.popBackStack();
         });
 

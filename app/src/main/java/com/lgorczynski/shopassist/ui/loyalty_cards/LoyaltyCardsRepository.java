@@ -67,10 +67,14 @@ public class LoyaltyCardsRepository {
                     @Override
                     public void onResponse(Call<LoyaltyCard> call, Response<LoyaltyCard> response) {
                         Log.d(TAG, "onPostResponse: Loyalty card added succesfully");
+                        boolean deleted = image.delete();
+                        Log.d(TAG, "onPostResponse: Temp thumbnail file deleted: " + deleted);
                     }
 
                     @Override
                     public void onFailure(Call<LoyaltyCard> call, Throwable t) {
+                        boolean deleted = image.delete();
+                        Log.d(TAG, "onPostFailure: Temp thumbnail file deleted: " + deleted);
                         Log.d(TAG, "onPostFailure: Error on adding loyaltycard");
                     }
                 });
@@ -130,11 +134,15 @@ public class LoyaltyCardsRepository {
                     @Override
                     public void onResponse(Call<LoyaltyCard> call, Response<LoyaltyCard> response) {
                         Log.d(TAG, "onPatchResponse: Updated succesfully");
+                        boolean deleted = image.delete();
+                        Log.d(TAG, "onResponse: Temp thumbnail deleted: " + deleted);
                     }
 
                     @Override
                     public void onFailure(Call<LoyaltyCard> call, Throwable t) {
                         Log.d(TAG, "onPatchFailure: Error on updating");
+                        boolean deleted = image.delete();
+                        Log.d(TAG, "onResponse: Temp thumbnail deleted: " + deleted);
                     }
                 });
     }
@@ -149,11 +157,15 @@ public class LoyaltyCardsRepository {
                     @Override
                     public void onResponse(Call<LoyaltyCard> call, Response<LoyaltyCard> response) {
                         Log.d(TAG, "onPatchResponse: Updated succesfully");
+                        boolean deleted = image.delete();
+                        Log.d(TAG, "onResponse: Temp thumbnail deleted: " + deleted);
                     }
 
                     @Override
                     public void onFailure(Call<LoyaltyCard> call, Throwable t) {
                         Log.d(TAG, "onPatchFailure: Error on updating");
+                        boolean deleted = image.delete();
+                        Log.d(TAG, "onResponse: Temp thumbnail deleted: " + deleted);
                     }
                 });
     }

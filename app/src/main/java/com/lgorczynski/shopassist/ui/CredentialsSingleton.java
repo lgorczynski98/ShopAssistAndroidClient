@@ -8,6 +8,8 @@ public class CredentialsSingleton {
     public static final String RECEIPTS_IMAGE_BASE_URL = CredentialsSingleton.BASE_URL + "receipts/image/";
     public static final String RECEIPTS_THUMBNAIL_BASE_URL = CredentialsSingleton.BASE_URL + "receipts/thumbnail/";
     public static final String LOYALTYCARDS_IMAGE_BASE_URL = CredentialsSingleton.BASE_URL + "loyaltycards/image/";
+    public static final int PREF_THUMBNAIL_WIDTH = 200;
+    public static final int PREF_THUMBNAIL_HEIGHT = 200;
 
     private CredentialsSingleton(){
 
