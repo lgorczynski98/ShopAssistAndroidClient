@@ -35,6 +35,7 @@ import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
+import com.lgorczynski.shopassist.ui.ImageFileCreator;
 import com.lgorczynski.shopassist.ui.ImageScaler;
 
 import java.io.File;
@@ -58,11 +59,15 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
     protected ReceiptsViewModel receiptsViewModel;
 
     protected ImageView image;
-    private String capturedPhotoPath;
-    private String selectedPhotoPath;
-    private String currentPhotoPath;
+    private String capturedPhotoPath;   //image that was captured via camera intent
+    private String selectedPhotoPath;   //image that was chosen by user from gallery intent
+    protected String currentPhotoPath;    //image that is currently chosen to be uploaded
     private int REQUEST_PICK_PHOTO = 500;
     private int REQUEST_CAPTURE = 501;
+
+    private boolean wasSubmitted = false;
+
+    protected ImageFileCreator imageFileCreator;
 
     protected EditText title;
     protected EditText shopName;
@@ -91,6 +96,8 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
         String imagePath = getArguments().getString("imagePath");
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
         imageFile = new File(imagePath);
+
+        imageFileCreator = new ImageFileCreator(getContext());
 
         final TextView text = root.findViewById(R.id.receipt_form_extracted_text_test);
         final ImageView imagePreview = root.findViewById(R.id.receipt_form_receipt_image);
@@ -233,11 +240,14 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
     @Override
     public void onDestroy() {
         super.onDestroy();
-        try {
-            imageFile.delete();
-        }
-        catch(NullPointerException e) {
-            Log.d(TAG, "onDestroy: ImageFile is null");
+        if(!wasSubmitted){
+            try {
+                imageFile.delete();
+                Log.d(TAG, "onDestroy: Receipt image deleted");
+            }
+            catch(NullPointerException e) {
+                Log.d(TAG, "onDestroy: ImageFile is null");
+            }
         }
     }
 
@@ -248,8 +258,11 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
                 showDatePickerDialog();
                 break;
             case R.id.receipt_form_submit:
+                if(!isFormInputValid())
+                    break;
+                wasSubmitted = true;
                 try {
-                    File thumbnailFile = createTempThumbnailFile(ImageScaler.getScaledBitmap(currentPhotoPath, 200, 200));
+                    File thumbnailFile = imageFileCreator.createTempThumbnailFile(ImageScaler.getScaledBitmap(currentPhotoPath, 200, 200));
                     Log.d(TAG, "onClick: Temp thumbnail file created correclty");
                     receiptsViewModel.postReceipt(title.getText().toString(), shopName.getText().toString(), purchaseDate.getText().toString(), price.getText().toString(), returnSeekBar.getProgress(), warrantySeekBar.getProgress(), imageFile, thumbnailFile, CredentialsSingleton.getInstance().getToken());
                 }
@@ -263,7 +276,9 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
                 if(cameraIntent.resolveActivity(getActivity().getPackageManager()) != null){
                     File photoFile = null;
                     try {
-                        photoFile = createImageFile();
+                        photoFile = imageFileCreator.createImageFile();
+                        capturedPhotoPath = photoFile.getAbsolutePath();
+                        selectedPhotoPath = capturedPhotoPath;
                     }
                     catch(Exception e) {
                         Log.d(TAG, "onClick: Error on starting camera intent");
@@ -282,6 +297,14 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
                 photoPick.setType("image/*");
                 startActivityForResult(photoPick, REQUEST_PICK_PHOTO);
         }
+    }
+
+    protected boolean isFormInputValid(){
+        if(title.getText().toString().equals("") || shopName.getText().toString().equals("")){
+            Toast.makeText(getContext(), "Title and shop name must be filled", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     private void showDatePickerDialog(){
@@ -323,29 +346,5 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
             Bitmap bitmap = ImageScaler.getScaledBitmap(capturedPhotoPath, CredentialsSingleton.PREF_THUMBNAIL_WIDTH, CredentialsSingleton.PREF_THUMBNAIL_HEIGHT);
             image.setImageBitmap(bitmap);
         }
-    }
-
-    private File createImageFile() throws IOException {
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timestamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-        capturedPhotoPath = image.getAbsolutePath();
-        selectedPhotoPath = capturedPhotoPath;
-        return image;
-    }
-
-    private File createTempThumbnailFile(Bitmap bitmap) throws IOException{
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timestamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File thumbnail = File.createTempFile(imageFileName, ".jpg", storageDir);
-        try (OutputStream out = new FileOutputStream(thumbnail)){
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-        }
-        catch (Exception e){
-            Log.d(TAG, "createTempThumbnailFile: failed on creating temporary thumbnail file");
-        }
-        return thumbnail;
     }
 }

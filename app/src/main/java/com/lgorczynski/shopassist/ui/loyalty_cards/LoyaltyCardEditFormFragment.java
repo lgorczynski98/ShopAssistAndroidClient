@@ -47,9 +47,11 @@ public class LoyaltyCardEditFormFragment extends LoyaltyCardFormFragment {
             File imageFile = null;
             if(!titleEditText.getText().toString().equals(title))
                 titleChanged = true;
+            if(!isFormInputValid(titleEditText.getText().toString()))
+                return;
             if(currentPhotoPath != null){
                 try {
-                    imageFile = createTempThumbnailFile(ImageScaler.getScaledBitmap(currentPhotoPath, 200, 200));
+                    imageFile = imageFileCreator.createTempThumbnailFile(ImageScaler.getScaledBitmap(currentPhotoPath, 200, 200));
                     Log.d(TAG, "onCreateView: Temp thumbnail file created correclty");
                     imageChanged = true;
                 }

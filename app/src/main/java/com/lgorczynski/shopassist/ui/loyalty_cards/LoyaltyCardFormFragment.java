@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +30,7 @@ import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
+import com.lgorczynski.shopassist.ui.ImageFileCreator;
 import com.lgorczynski.shopassist.ui.ImageScaler;
 
 import java.io.File;
@@ -60,6 +62,8 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
 
     protected EditText titleEditText;
 
+    protected ImageFileCreator imageFileCreator;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -70,6 +74,8 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
         final ImageView barcodeImage = root.findViewById(R.id.loyalty_card_form_barcode);
         final TextView contentText = root.findViewById(R.id.loyalty_card_form_text);
         cardImage = root.findViewById(R.id.loyalty_card_form_card_image);
+
+        imageFileCreator = new ImageFileCreator(getContext());
 
         barcodeContent = getArguments().getString("content");
         contentText.setText(barcodeContent);
@@ -115,7 +121,9 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
                 if(cameraIntent.resolveActivity(getActivity().getPackageManager()) != null){
                     File photoFile = null;
                     try {
-                        photoFile = createImageFile();
+                        photoFile = imageFileCreator.createImageFile();
+                        capturedPhotoPath = photoFile.getAbsolutePath();
+                        selectedPhotoPath = capturedPhotoPath;
                     }
                     catch(Exception e) {
                         Log.d(TAG, "onClick: Error on starting camera intent");
@@ -132,8 +140,10 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
             }
             case R.id.loyalty_card_form_submit_button: {
                 String title = titleEditText.getText().toString();
+                if(!isFormInputValid(title))
+                    break;
                 try {
-                    File thumbnailFile = createTempThumbnailFile(ImageScaler.getScaledBitmap(currentPhotoPath, 200, 200));
+                    File thumbnailFile = imageFileCreator.createTempThumbnailFile(ImageScaler.getScaledBitmap(currentPhotoPath, 200, 200));
                     loyaltyCardsViewModel.postLoyaltyCard(title, barcodeFormat, barcodeContent, thumbnailFile, CredentialsSingleton.getInstance().getToken());
                     Log.d(TAG, "onClick: Temp thumbnail file created correclty");
                 }
@@ -145,6 +155,14 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
                 break;
             }
         }
+    }
+
+    protected boolean isFormInputValid(String title){
+        if(title.equals("")){
+            Toast.makeText(getContext(), "Title must be filled", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -168,29 +186,5 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
             Bitmap bitmap = ImageScaler.getScaledBitmap(capturedPhotoPath, CredentialsSingleton.PREF_THUMBNAIL_WIDTH, CredentialsSingleton.PREF_THUMBNAIL_HEIGHT);
             cardImage.setImageBitmap(bitmap);
         }
-    }
-
-    private File createImageFile() throws IOException{
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timestamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
-        capturedPhotoPath = image.getAbsolutePath();
-        selectedPhotoPath = capturedPhotoPath;
-        return image;
-    }
-
-    protected File createTempThumbnailFile(Bitmap bitmap) throws IOException{
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timestamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File thumbnail = File.createTempFile(imageFileName, ".jpg", storageDir);
-        try (OutputStream out = new FileOutputStream(thumbnail)){
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-        }
-        catch (Exception e){
-            Log.d(TAG, "createTempThumbnailFile: failed on creating temporary thumbnail file");
-        }
-        return thumbnail;
     }
 }
