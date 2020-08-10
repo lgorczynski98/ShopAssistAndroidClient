@@ -54,7 +54,7 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class ReceiptFormFragment extends Fragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener {
 
-    private NavController navController;
+    protected NavController navController;
     private File imageFile;
     protected ReceiptsViewModel receiptsViewModel;
 
@@ -65,7 +65,7 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
     private int REQUEST_PICK_PHOTO = 500;
     private int REQUEST_CAPTURE = 501;
 
-    private boolean wasSubmitted = false;
+    protected boolean wasSubmitted = false;
 
     protected ImageFileCreator imageFileCreator;
 

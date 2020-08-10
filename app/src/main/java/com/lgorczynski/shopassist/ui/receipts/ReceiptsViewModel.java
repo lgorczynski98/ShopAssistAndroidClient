@@ -35,6 +35,18 @@ public class ReceiptsViewModel extends ViewModel {
         receiptsRepository.deleteReceipt(receiptID, token);
     }
 
+    public void patchReceipt(int receiptID, String title, String shopName, String purchaseDate, String purchaseCost, int weeksToReturn, int monthsOfWarranty, String token){
+        receiptsRepository.patchReceipt(receiptID, title, shopName, purchaseDate, purchaseCost, weeksToReturn, monthsOfWarranty, token);
+    }
+
+    public void patchReceipt(int receiptID, File thumbnail, String token){
+        receiptsRepository.patchReceipt(receiptID, thumbnail, token);
+    }
+
+    public void patchReceipt(int receiptID, String title, String shopName, String purchaseDate, String purchaseCost, int weeksToReturn, int monthsOfWarranty, File thumbnail, String token){
+        receiptsRepository.patchReceipt(receiptID, title, shopName, purchaseDate, purchaseCost, weeksToReturn, monthsOfWarranty, thumbnail, token);
+    }
+
     public LiveData<List<Receipt>> getReceiptsResponseLiveData() {
         return receiptsResponseLiveData;
     }

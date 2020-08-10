@@ -61,7 +61,12 @@ public class ReceiptRecyclerViewAdapter extends RecyclerView.Adapter<ReceiptRecy
 
     @Override
     public int getItemCount() {
-        return mReceipts.size();
+        try {
+            return mReceipts.size();
+        }
+        catch(Exception e) {
+            return 0;
+        }
     }
 
     public Receipt getItemOnPosition(int position){

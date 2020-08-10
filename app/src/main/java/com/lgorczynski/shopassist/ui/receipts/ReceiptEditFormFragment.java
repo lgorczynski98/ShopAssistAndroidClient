@@ -1,6 +1,7 @@
 package com.lgorczynski.shopassist.ui.receipts;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,19 +12,30 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 import com.lgorczynski.shopassist.ui.CustomPicasso;
+import com.lgorczynski.shopassist.ui.ImageFileCreator;
+import com.lgorczynski.shopassist.ui.ImageScaler;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 public class ReceiptEditFormFragment extends ReceiptFormFragment {
 
+    private static final String TAG = "ReceiptEditFormFragment";
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        receiptsViewModel =
+                ViewModelProviders.of(this).get(ReceiptsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_receipt_form, container, false);
 
         Receipt receipt = (Receipt)getArguments().getSerializable("receipt");
+
+        imageFileCreator = new ImageFileCreator(getContext());
 
         title = root.findViewById(R.id.receipt_form_title);
         shopName = root.findViewById(R.id.receipt_form_shop_name);
@@ -94,12 +106,46 @@ public class ReceiptEditFormFragment extends ReceiptFormFragment {
             }
         });
 
-        submit.setOnClickListener(this);
-
         final Button cameraButton = root.findViewById(R.id.receipt_form_from_camera_button);
         final Button galleryButton = root.findViewById(R.id.receipt_form_from_gallery_button);
         cameraButton.setOnClickListener(this);
         galleryButton.setOnClickListener(this);
+
+        submit.setOnClickListener(view -> {
+            boolean someValueChanged = false;
+            boolean thumbnailChanged = false;
+            File thumbnailFile = null;
+            if(!title.getText().toString().equals(receipt.getTitle())
+                    || !shopName.getText().toString().equals(receipt.getShopName())
+                    || !purchaseDate.getText().toString().equals(receipt.getPurchaseDate())
+                    || !price.getText().toString().equals(String.valueOf(receipt.getPrice()))
+                    || returnSeekBar.getProgress() != receipt.getReturnWeeks()
+                    || warrantySeekBar.getProgress() != receipt.getWarrantyMonths()
+            ){
+                someValueChanged = true;
+            }
+            if(!isFormInputValid())
+                return;
+            if(currentPhotoPath != null){
+                try {
+                    thumbnailFile = imageFileCreator.createTempThumbnailFile(ImageScaler.getScaledBitmap(currentPhotoPath, 200, 200));
+                    Log.d(TAG, "onCreateView: Temp thumbnail file created correctly");
+                    thumbnailChanged = true;
+                }
+                catch(Exception e) {
+                    thumbnailChanged = false;
+                }
+            }
+            wasSubmitted = true;
+            if(someValueChanged && thumbnailChanged)
+                receiptsViewModel.patchReceipt(receipt.getId(), title.getText().toString(), shopName.getText().toString(), purchaseDate.getText().toString(), price.getText().toString(), returnSeekBar.getProgress(), warrantySeekBar.getProgress(), thumbnailFile, CredentialsSingleton.getInstance().getToken());
+            else if(someValueChanged)
+                receiptsViewModel.patchReceipt(receipt.getId(), title.getText().toString(), shopName.getText().toString(), purchaseDate.getText().toString(), price.getText().toString(), returnSeekBar.getProgress(), warrantySeekBar.getProgress(), CredentialsSingleton.getInstance().getToken());
+            else if(thumbnailChanged)
+                receiptsViewModel.patchReceipt(receipt.getId(), thumbnailFile, CredentialsSingleton.getInstance().getToken());
+
+            navController.popBackStack();
+        });
 
         return root;
     }

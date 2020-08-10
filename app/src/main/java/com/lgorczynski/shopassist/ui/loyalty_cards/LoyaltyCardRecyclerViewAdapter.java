@@ -58,7 +58,12 @@ public class LoyaltyCardRecyclerViewAdapter extends RecyclerView.Adapter<Loyalty
 
     @Override
     public int getItemCount() {
-        return mLoyaltyCards.size();
+        try {
+            return mLoyaltyCards.size();
+        }
+        catch(Exception e) {
+            return 0;
+        }
     }
 
     public LoyaltyCard getItemOnPosition(int position){

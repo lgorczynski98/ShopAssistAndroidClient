@@ -165,7 +165,7 @@ public class LoyaltyCardsRepository {
                     public void onFailure(Call<LoyaltyCard> call, Throwable t) {
                         Log.d(TAG, "onPatchFailure: Error on updating");
                         boolean deleted = image.delete();
-                        Log.d(TAG, "onResponse: Temp thumbnail deleted: " + deleted);
+                        Log.d(TAG, "onFailure: Temp thumbnail deleted: " + deleted);
                     }
                 });
     }

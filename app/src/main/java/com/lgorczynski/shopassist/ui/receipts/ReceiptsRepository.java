@@ -137,6 +137,72 @@ public class ReceiptsRepository {
                 });
     }
 
+    public void patchReceipt(int receiptID, String title, String shopName, String purchaseDate, String purchaseCost, int weeksToReturn, int monthsOfWarranty, String token){
+        receiptsService.patchReceipt(receiptID, title, shopName, purchaseDate, purchaseCost, weeksToReturn, monthsOfWarranty, token)
+                .enqueue(new Callback<Receipt>() {
+                    @Override
+                    public void onResponse(Call<Receipt> call, Response<Receipt> response) {
+                        Log.d(TAG, "onResponse: Updated succesfully");
+                    }
+
+                    @Override
+                    public void onFailure(Call<Receipt> call, Throwable t) {
+                        Log.d(TAG, "onFailure: Error on updating");
+                    }
+                });
+    }
+
+    public void patchReceipt(int receiptID, File thumbnail, String token){
+        RequestBody requestFile = RequestBody.create(thumbnail, MediaType.parse("multipart/form-data"));
+        MultipartBody.Part thumbnailBody = MultipartBody.Part.createFormData("thumbnail", thumbnail.getName(), requestFile);
+
+        receiptsService.patchReceipt(receiptID, thumbnailBody, token)
+                .enqueue(new Callback<Receipt>() {
+                    @Override
+                    public void onResponse(Call<Receipt> call, Response<Receipt> response) {
+                        Log.d(TAG, "onResponse: Updated succesfully");
+                        boolean deleted = thumbnail.delete();
+                        Log.d(TAG, "onResponse: Temp thumbnail deleted: " + deleted);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Receipt> call, Throwable t) {
+                        Log.d(TAG, "onFailure: Error on updating");
+                        boolean deleted = thumbnail.delete();
+                        Log.d(TAG, "onFailure: Temp thumbnail deleted: " + deleted);
+                    }
+                });
+    }
+
+    public void patchReceipt(int receiptID, String title, String shopName, String purchaseDate, String purchaseCost, int weeksToReturn, int monthsOfWarranty, File thumbnail, String token){
+        RequestBody requestFile = RequestBody.create(thumbnail, MediaType.parse("multipart/form-data"));
+        MultipartBody.Part thumbnailBody = MultipartBody.Part.createFormData("thumbnail", thumbnail.getName(), requestFile);
+
+        RequestBody requestTitle = RequestBody.create(title, MediaType.parse("multipart/form-data"));
+        RequestBody requestShopName = RequestBody.create(shopName, MediaType.parse("multipart/form-data"));
+        RequestBody requestPurchaseDate = RequestBody.create(purchaseDate, MediaType.parse("multipart/form-data"));
+        RequestBody requestPurchaseCost = RequestBody.create(purchaseCost, MediaType.parse("multipart/form-data"));
+        RequestBody requestWeeksToReturn = RequestBody.create(String.valueOf(weeksToReturn), MediaType.parse("multipart/form-data"));
+        RequestBody requestMonthsOfWarranty = RequestBody.create(String.valueOf(monthsOfWarranty), MediaType.parse("multipart/form-data"));
+
+        receiptsService.patchReceipt(receiptID, requestTitle, requestShopName, requestPurchaseDate, requestPurchaseCost, requestWeeksToReturn, requestMonthsOfWarranty, thumbnailBody, token)
+                .enqueue(new Callback<Receipt>() {
+                    @Override
+                    public void onResponse(Call<Receipt> call, Response<Receipt> response) {
+                        Log.d(TAG, "onResponse: Updated succesfully");
+                        boolean deleted = thumbnail.delete();
+                        Log.d(TAG, "onResponse: Temp thumbnail deleted: " + deleted);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Receipt> call, Throwable t) {
+                        Log.d(TAG, "onFailure: Error on updating");
+                        boolean deleted = thumbnail.delete();
+                        Log.d(TAG, "onFailure: Temp thumbnail deleted: " + deleted);
+                    }
+                });
+    }
+
     public MutableLiveData<List<Receipt>> getReceiptsResponseMutableLiveData() {
         return receiptsResponseMutableLiveData;
     }
