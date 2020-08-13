@@ -3,6 +3,7 @@ package com.lgorczynski.shopassist.ui.receipts;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.navigation.NavController;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,5 +50,9 @@ public class ReceiptsViewModel extends ViewModel {
 
     public LiveData<List<Receipt>> getReceiptsResponseLiveData() {
         return receiptsResponseLiveData;
+    }
+
+    public void setRepositoryNavController(NavController navController){
+        receiptsRepository.setNavController(navController);
     }
 }

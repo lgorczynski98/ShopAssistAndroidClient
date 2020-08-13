@@ -37,6 +37,9 @@ public class ReceiptEditFormFragment extends ReceiptFormFragment {
 
         imageFileCreator = new ImageFileCreator(getContext());
 
+        progressBar = root.findViewById(R.id.receipt_form_progress_bar);
+        progressBar.setVisibility(View.GONE);
+
         title = root.findViewById(R.id.receipt_form_title);
         shopName = root.findViewById(R.id.receipt_form_shop_name);
         purchaseDate = root.findViewById(R.id.receipt_form_date);
@@ -126,6 +129,10 @@ public class ReceiptEditFormFragment extends ReceiptFormFragment {
             }
             if(!isFormInputValid())
                 return;
+
+            submit.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+
             if(currentPhotoPath != null){
                 try {
                     thumbnailFile = imageFileCreator.createTempThumbnailFile(ImageScaler.getScaledBitmap(currentPhotoPath, 200, 200));
@@ -137,14 +144,13 @@ public class ReceiptEditFormFragment extends ReceiptFormFragment {
                 }
             }
             wasSubmitted = true;
+            receiptsViewModel.setRepositoryNavController(navController);
             if(someValueChanged && thumbnailChanged)
                 receiptsViewModel.patchReceipt(receipt.getId(), title.getText().toString(), shopName.getText().toString(), purchaseDate.getText().toString(), price.getText().toString(), returnSeekBar.getProgress(), warrantySeekBar.getProgress(), thumbnailFile, CredentialsSingleton.getInstance().getToken());
             else if(someValueChanged)
                 receiptsViewModel.patchReceipt(receipt.getId(), title.getText().toString(), shopName.getText().toString(), purchaseDate.getText().toString(), price.getText().toString(), returnSeekBar.getProgress(), warrantySeekBar.getProgress(), CredentialsSingleton.getInstance().getToken());
             else if(thumbnailChanged)
                 receiptsViewModel.patchReceipt(receipt.getId(), thumbnailFile, CredentialsSingleton.getInstance().getToken());
-
-            navController.popBackStack();
         });
 
         return root;

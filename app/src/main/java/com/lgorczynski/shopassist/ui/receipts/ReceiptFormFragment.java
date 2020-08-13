@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,6 +70,7 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
 
     protected ImageFileCreator imageFileCreator;
 
+    protected ProgressBar progressBar;
     protected EditText title;
     protected EditText shopName;
     protected EditText purchaseDate;
@@ -105,6 +107,9 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
 
         String receiptText = detectReceiptText(bitmap);
         text.setText(receiptText);
+
+        progressBar = root.findViewById(R.id.receipt_form_progress_bar);
+        progressBar.setVisibility(View.GONE);
 
         title = root.findViewById(R.id.receipt_form_title);
         shopName = root.findViewById(R.id.receipt_form_shop_name);
@@ -261,6 +266,9 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
                 if(!isFormInputValid())
                     break;
                 wasSubmitted = true;
+                submit.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+                receiptsViewModel.setRepositoryNavController(navController);
                 try {
                     File thumbnailFile = imageFileCreator.createTempThumbnailFile(ImageScaler.getScaledBitmap(currentPhotoPath, 200, 200));
                     Log.d(TAG, "onClick: Temp thumbnail file created correclty");
@@ -269,7 +277,6 @@ public class ReceiptFormFragment extends Fragment implements View.OnClickListene
                 catch(Exception e) {
                     receiptsViewModel.postReceipt(title.getText().toString(), shopName.getText().toString(), purchaseDate.getText().toString(), price.getText().toString(), returnSeekBar.getProgress(), warrantySeekBar.getProgress(), imageFile, CredentialsSingleton.getInstance().getToken());
                 }
-                navController.popBackStack();
                 break;
             case R.id.receipt_form_from_camera_button:
                 Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

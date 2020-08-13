@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/loyalty_card_form_relative_layout">
 
 
     <LinearLayout
@@ -83,10 +84,18 @@
             android:id="@+id/loyalty_card_form_submit_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="16dp"
             android:background="@drawable/rounded_confirm_button"
             android:text="@string/submit"
             android:textColor="@android:color/primary_text_dark"
-            android:layout_margin="16dp"/>
+            tools:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/loyalty_card_form_progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:visibility="gone" />
 
     </LinearLayout>
 

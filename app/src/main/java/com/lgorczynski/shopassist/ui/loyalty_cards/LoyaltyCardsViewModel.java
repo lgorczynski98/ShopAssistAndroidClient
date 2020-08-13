@@ -2,6 +2,7 @@ package com.lgorczynski.shopassist.ui.loyalty_cards;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.navigation.NavController;
 
 import java.io.File;
 import java.util.List;
@@ -47,5 +48,9 @@ public class LoyaltyCardsViewModel extends ViewModel {
 
     public void patchLoyaltyCard(int cardID, String title, File image, String token){
         loyaltyCardsRepository.patchLoyaltyCard(cardID, title, image, token);
+    }
+
+    public void setRepositoryNavController(NavController navController) {
+        loyaltyCardsRepository.setNavController(navController);
     }
 }

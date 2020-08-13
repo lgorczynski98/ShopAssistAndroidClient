@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.navigation.NavController;
 
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 
@@ -26,6 +27,8 @@ public class LoyaltyCardsRepository {
 
     private LoyaltyCardsService loyaltyCardsService;
     private MutableLiveData<List<LoyaltyCard>> loyaltyCardsResponseMutableLiveData;
+
+    private NavController navController;
 
     public LoyaltyCardsRepository(){
         loyaltyCardsResponseMutableLiveData = new MutableLiveData<>();
@@ -69,6 +72,7 @@ public class LoyaltyCardsRepository {
                         Log.d(TAG, "onPostResponse: Loyalty card added succesfully");
                         boolean deleted = image.delete();
                         Log.d(TAG, "onPostResponse: Temp thumbnail file deleted: " + deleted);
+                        navController.popBackStack();
                     }
 
                     @Override
@@ -76,6 +80,7 @@ public class LoyaltyCardsRepository {
                         boolean deleted = image.delete();
                         Log.d(TAG, "onPostFailure: Temp thumbnail file deleted: " + deleted);
                         Log.d(TAG, "onPostFailure: Error on adding loyaltycard");
+                        navController.popBackStack();
                     }
                 });
     }
@@ -86,11 +91,13 @@ public class LoyaltyCardsRepository {
                     @Override
                     public void onResponse(Call<LoyaltyCard> call, Response<LoyaltyCard> response) {
                         Log.d(TAG, "onPostResponse: Loyalty card added succesfully");
+                        navController.popBackStack();
                     }
 
                     @Override
                     public void onFailure(Call<LoyaltyCard> call, Throwable t) {
                         Log.d(TAG, "onPostFailure: Error on adding loyaltycard");
+                        navController.popBackStack();
                     }
                 });
     }
@@ -116,11 +123,13 @@ public class LoyaltyCardsRepository {
                     @Override
                     public void onResponse(Call<LoyaltyCard> call, Response<LoyaltyCard> response) {
                         Log.d(TAG, "onPatchResponse: Updated succesfully");
+                        navController.popBackStack();
                     }
 
                     @Override
                     public void onFailure(Call<LoyaltyCard> call, Throwable t) {
                         Log.d(TAG, "onPatchFailure: Error on updating");
+                        navController.popBackStack();
                     }
                 });
     }
@@ -136,6 +145,7 @@ public class LoyaltyCardsRepository {
                         Log.d(TAG, "onPatchResponse: Updated succesfully");
                         boolean deleted = image.delete();
                         Log.d(TAG, "onResponse: Temp thumbnail deleted: " + deleted);
+                        navController.popBackStack();
                     }
 
                     @Override
@@ -143,6 +153,7 @@ public class LoyaltyCardsRepository {
                         Log.d(TAG, "onPatchFailure: Error on updating");
                         boolean deleted = image.delete();
                         Log.d(TAG, "onResponse: Temp thumbnail deleted: " + deleted);
+                        navController.popBackStack();
                     }
                 });
     }
@@ -159,6 +170,7 @@ public class LoyaltyCardsRepository {
                         Log.d(TAG, "onPatchResponse: Updated succesfully");
                         boolean deleted = image.delete();
                         Log.d(TAG, "onResponse: Temp thumbnail deleted: " + deleted);
+                        navController.popBackStack();
                     }
 
                     @Override
@@ -166,11 +178,16 @@ public class LoyaltyCardsRepository {
                         Log.d(TAG, "onPatchFailure: Error on updating");
                         boolean deleted = image.delete();
                         Log.d(TAG, "onFailure: Temp thumbnail deleted: " + deleted);
+                        navController.popBackStack();
                     }
                 });
     }
 
     public LiveData<List<LoyaltyCard>> getLoyaltyCardsResponseMutableLiveData() {
         return loyaltyCardsResponseMutableLiveData;
+    }
+
+    public void setNavController(NavController navController) {
+        this.navController = navController;
     }
 }

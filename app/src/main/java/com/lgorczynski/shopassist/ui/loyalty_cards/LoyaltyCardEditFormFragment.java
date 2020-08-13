@@ -49,6 +49,8 @@ public class LoyaltyCardEditFormFragment extends LoyaltyCardFormFragment {
                 titleChanged = true;
             if(!isFormInputValid(titleEditText.getText().toString()))
                 return;
+            submitButton.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
             if(currentPhotoPath != null){
                 try {
                     imageFile = imageFileCreator.createTempThumbnailFile(ImageScaler.getScaledBitmap(currentPhotoPath, 200, 200));
@@ -59,6 +61,7 @@ public class LoyaltyCardEditFormFragment extends LoyaltyCardFormFragment {
                     imageChanged = false;
                 }
             }
+            loyaltyCardsViewModel.setRepositoryNavController(navController);
             if(titleChanged && imageChanged)
                 loyaltyCardsViewModel.patchLoyaltyCard(cardID, titleEditText.getText().toString(), imageFile, CredentialsSingleton.getInstance().getToken());
             else if(titleChanged)
@@ -66,7 +69,6 @@ public class LoyaltyCardEditFormFragment extends LoyaltyCardFormFragment {
             else if(imageChanged)
                 loyaltyCardsViewModel.patchLoyaltyCard(cardID, imageFile, CredentialsSingleton.getInstance().getToken());
 
-            navController.popBackStack();
         });
 
         return root;

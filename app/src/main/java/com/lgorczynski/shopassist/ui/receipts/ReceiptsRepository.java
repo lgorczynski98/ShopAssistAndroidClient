@@ -3,6 +3,7 @@ package com.lgorczynski.shopassist.ui.receipts;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
+import androidx.navigation.NavController;
 
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 
@@ -27,6 +28,8 @@ public class ReceiptsRepository {
 
     private ReceiptsService receiptsService;
     private MutableLiveData<List<Receipt>> receiptsResponseMutableLiveData;
+
+    private NavController navController;
 
     public ReceiptsRepository(){
         receiptsResponseMutableLiveData = new MutableLiveData<>();
@@ -80,6 +83,7 @@ public class ReceiptsRepository {
                         Log.d(TAG, "onResponce: Temp thumbnail file deleted: " + deleted);
                         deleted = image.delete();
                         Log.d(TAG, "onResponse: Receipt image file deleted: " + deleted);
+                        navController.popBackStack();
                     }
 
                     @Override
@@ -89,6 +93,7 @@ public class ReceiptsRepository {
                         Log.d(TAG, "onResponce: Temp thumbnail file deleted: " + deleted);
                         deleted = image.delete();
                         Log.d(TAG, "onResponse: Receipt image file deleted: " + deleted);
+                        navController.popBackStack();
                     }
                 });
     }
@@ -111,6 +116,7 @@ public class ReceiptsRepository {
                         Log.d(TAG, "onPostResponse: Receipt added correctly");
                         boolean deleted = image.delete();
                         Log.d(TAG, "onResponse: Receipt image file deleted: " + deleted);
+                        navController.popBackStack();
                     }
 
                     @Override
@@ -118,6 +124,7 @@ public class ReceiptsRepository {
                         Log.d(TAG, "onPostFailure: Error on adding receipt");
                         boolean deleted = image.delete();
                         Log.d(TAG, "onResponse: Receipt image file deleted: " + deleted);
+                        navController.popBackStack();
                     }
                 });
     }
@@ -143,11 +150,13 @@ public class ReceiptsRepository {
                     @Override
                     public void onResponse(Call<Receipt> call, Response<Receipt> response) {
                         Log.d(TAG, "onResponse: Updated succesfully");
+                        navController.popBackStack();
                     }
 
                     @Override
                     public void onFailure(Call<Receipt> call, Throwable t) {
                         Log.d(TAG, "onFailure: Error on updating");
+                        navController.popBackStack();
                     }
                 });
     }
@@ -163,6 +172,7 @@ public class ReceiptsRepository {
                         Log.d(TAG, "onResponse: Updated succesfully");
                         boolean deleted = thumbnail.delete();
                         Log.d(TAG, "onResponse: Temp thumbnail deleted: " + deleted);
+                        navController.popBackStack();
                     }
 
                     @Override
@@ -170,6 +180,7 @@ public class ReceiptsRepository {
                         Log.d(TAG, "onFailure: Error on updating");
                         boolean deleted = thumbnail.delete();
                         Log.d(TAG, "onFailure: Temp thumbnail deleted: " + deleted);
+                        navController.popBackStack();
                     }
                 });
     }
@@ -192,6 +203,7 @@ public class ReceiptsRepository {
                         Log.d(TAG, "onResponse: Updated succesfully");
                         boolean deleted = thumbnail.delete();
                         Log.d(TAG, "onResponse: Temp thumbnail deleted: " + deleted);
+                        navController.popBackStack();
                     }
 
                     @Override
@@ -199,11 +211,16 @@ public class ReceiptsRepository {
                         Log.d(TAG, "onFailure: Error on updating");
                         boolean deleted = thumbnail.delete();
                         Log.d(TAG, "onFailure: Temp thumbnail deleted: " + deleted);
+                        navController.popBackStack();
                     }
                 });
     }
 
     public MutableLiveData<List<Receipt>> getReceiptsResponseMutableLiveData() {
         return receiptsResponseMutableLiveData;
+    }
+
+    public void setNavController(NavController navController) {
+        this.navController = navController;
     }
 }

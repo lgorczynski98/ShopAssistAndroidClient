@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,8 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
     private int REQUEST_PICK_PHOTO = 100;
     private int REQUEST_CAPTURE = 101;
 
+    protected ProgressBar progressBar;
+    private Button submitButton;
     private ImageView cardImage;
     private String capturedPhotoPath;
     private String selectedPhotoPath;
@@ -90,9 +93,12 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
             e.printStackTrace();
         }
 
+        progressBar = root.findViewById(R.id.loyalty_card_form_progress_bar);
+        progressBar.setVisibility(View.GONE);
+
         final Button cameraButton = root.findViewById(R.id.loyalty_card_form_from_camera_button);
         final Button galleryButton = root.findViewById(R.id.loyalty_card_form_from_gallery_button);
-        final Button submitButton = root.findViewById(R.id.loyalty_card_form_submit_button);
+        submitButton = root.findViewById(R.id.loyalty_card_form_submit_button);
         titleEditText = root.findViewById(R.id.loyalty_card_form_title_edit_text);
         cameraButton.setOnClickListener(this);
         galleryButton.setOnClickListener(this);
@@ -142,6 +148,9 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
                 String title = titleEditText.getText().toString();
                 if(!isFormInputValid(title))
                     break;
+                submitButton.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+                loyaltyCardsViewModel.setRepositoryNavController(navController);
                 try {
                     File thumbnailFile = imageFileCreator.createTempThumbnailFile(ImageScaler.getScaledBitmap(currentPhotoPath, 200, 200));
                     loyaltyCardsViewModel.postLoyaltyCard(title, barcodeFormat, barcodeContent, thumbnailFile, CredentialsSingleton.getInstance().getToken());
@@ -151,7 +160,6 @@ public class LoyaltyCardFormFragment extends Fragment implements View.OnClickLis
                     loyaltyCardsViewModel.postLoyaltyCard(title, barcodeFormat, barcodeContent, CredentialsSingleton.getInstance().getToken());
                 }
 
-                navController.popBackStack();
                 break;
             }
         }
