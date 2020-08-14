@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.NavController;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 
 import java.io.File;
@@ -102,17 +103,20 @@ public class LoyaltyCardsRepository {
                 });
     }
 
-    public void deleteLoyaltyCard(int cardID, String token){
+    public void deleteLoyaltyCard(int cardID, String token, BottomSheetDialog bottomSheetDialog){
         loyaltyCardsService.deleteLoyaltyCard(cardID, token)
                 .enqueue(new Callback<LoyaltyCard>() {
                     @Override
                     public void onResponse(Call<LoyaltyCard> call, Response<LoyaltyCard> response) {
                         Log.d(TAG, "onDeleteResponse: Card deleted succesfully");
+                        getLoyaltyCards(token);
+                        bottomSheetDialog.cancel();
                     }
 
                     @Override
                     public void onFailure(Call<LoyaltyCard> call, Throwable t) {
                         Log.d(TAG, "onDeleteFailure: Error");
+                        bottomSheetDialog.cancel();
                     }
                 });
     }

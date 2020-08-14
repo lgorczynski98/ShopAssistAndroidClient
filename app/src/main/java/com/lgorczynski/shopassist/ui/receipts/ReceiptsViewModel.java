@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.navigation.NavController;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +34,8 @@ public class ReceiptsViewModel extends ViewModel {
         receiptsRepository.postReceipt(title, shopName, purchaseDate, purchaseCost, weeksToReturn, monthsOfWarranty, image, token);
     }
 
-    public void deleteReceipt(int receiptID, String token){
-        receiptsRepository.deleteReceipt(receiptID, token);
+    public void deleteReceipt(int receiptID, String token, BottomSheetDialog bottomSheetDialog){
+        receiptsRepository.deleteReceipt(receiptID, token, bottomSheetDialog);
     }
 
     public void patchReceipt(int receiptID, String title, String shopName, String purchaseDate, String purchaseCost, int weeksToReturn, int monthsOfWarranty, String token){

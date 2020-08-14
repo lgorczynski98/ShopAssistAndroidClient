@@ -7,6 +7,8 @@
     <string name="title_receipt_form">Add new receipt</string>
     <string name="title_loyalty_card_form">Add new loyalty card</string>
     <string name="title_loyalty_card_edit_form">Edit loyalty card</string>
+    <string name="title_receipt_preview">Receipt Preview</string>
+    <string name="title_receipt_edit_form">Edit receipt</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
     <string name="register">Register</string>
@@ -43,4 +45,5 @@
     <string name="purchase_date">Purchase Date</string>
     <string name="purchase_cost">Purchase Cost</string>
     <string name="return_to">Return to</string>
+    <string name="print_receipt">Print receipt</string>
 </resources>

@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.navigation.NavController;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 import java.io.File;
 import java.util.List;
 
@@ -30,8 +32,8 @@ public class LoyaltyCardsViewModel extends ViewModel {
         loyaltyCardsRepository.postLoyaltyCard(title, barcode_format, barcode_content, token);
     }
 
-    public void deleteLoyaltyCard(int cardID, String token){
-        loyaltyCardsRepository.deleteLoyaltyCard(cardID, token);
+    public void deleteLoyaltyCard(int cardID, String token, BottomSheetDialog bottomSheetDialog){
+        loyaltyCardsRepository.deleteLoyaltyCard(cardID, token, bottomSheetDialog);
     }
 
     public LiveData<List<LoyaltyCard>> getLoyaltyCardsResponseLiveData(){

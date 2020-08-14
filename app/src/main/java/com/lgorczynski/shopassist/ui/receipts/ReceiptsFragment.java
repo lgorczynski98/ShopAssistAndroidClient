@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -121,8 +122,11 @@ public class ReceiptsFragment extends Fragment implements ReceiptRecyclerViewAda
             bottomSheetDialog.cancel();
         });
         delete.setOnClickListener(view -> {
-            receiptsViewModel.deleteReceipt(receipt.getId(), CredentialsSingleton.getInstance().getToken());
-            bottomSheetDialog.cancel();
+            ProgressBar progressBar = bottomSheetDialog.findViewById(R.id.receipts_settings_bottom_sheet_dialog_progress_bar);
+            delete.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+
+            receiptsViewModel.deleteReceipt(receipt.getId(), CredentialsSingleton.getInstance().getToken(), bottomSheetDialog);
         });
 
         bottomSheetDialog.show();

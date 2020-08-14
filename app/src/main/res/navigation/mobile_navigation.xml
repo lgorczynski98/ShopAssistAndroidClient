@@ -122,22 +122,22 @@
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.lgorczynski.shopassist.ui.about.AboutFragment"
-        android:label="fragment_about"
+        android:label="@string/about"
         tools:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/licenceFragment"
         android:name="com.lgorczynski.shopassist.ui.licence.LicenceFragment"
-        android:label="fragment_licence"
+        android:label="@string/licence"
         tools:layout="@layout/fragment_licence" />
     <fragment
         android:id="@+id/profileInfoFragment"
         android:name="com.lgorczynski.shopassist.ui.profile_info.ProfileInfoFragment"
-        android:label="fragment_profile_info"
+        android:label="@string/change_profile_info"
         tools:layout="@layout/fragment_profile_info" />
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.lgorczynski.shopassist.ui.settings.SettingsFragment"
-        android:label="fragment_settings"
+        android:label="@string/settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/loyaltyCardFormFragment"
@@ -156,10 +156,10 @@
     <fragment
         android:id="@+id/receiptPreviewFragment"
         android:name="com.lgorczynski.shopassist.ui.receipts.ReceiptPreviewFragment"
-        android:label="fragment_receipt_form"
+        android:label="@string/title_receipt_preview"
         tools:layout="@layout/fragment_receipt_form" />
     <fragment
         android:id="@+id/receiptEditFormFragment"
         android:name="com.lgorczynski.shopassist.ui.receipts.ReceiptEditFormFragment"
-        android:label="ReceiptEditFormFragment" />
+        android:label="@string/title_receipt_edit_form" />
 </navigation>

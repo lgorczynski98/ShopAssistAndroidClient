@@ -187,6 +187,15 @@
 
             </LinearLayout>
 
+            <Button
+                android:id="@+id/receipt_preview_print"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="@drawable/rounded_confirm_button"
+                android:text="@string/print_receipt"
+                android:textColor="@android:color/primary_text_dark" />
+
 
         </LinearLayout>
 

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -167,8 +168,11 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
             bottomSheetDialog.cancel();
         });
         delete.setOnClickListener(view -> {
-            loyaltyCardsViewModel.deleteLoyaltyCard(card.getId(), CredentialsSingleton.getInstance().getToken());
-            bottomSheetDialog.cancel();
+            ProgressBar progressBar = bottomSheetDialog.findViewById(R.id.loyalty_cards_settings_bottom_sheet_dialog_progress_bar);
+            delete.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
+
+            loyaltyCardsViewModel.deleteLoyaltyCard(card.getId(), CredentialsSingleton.getInstance().getToken(), bottomSheetDialog);
         });
 
         bottomSheetDialog.show();

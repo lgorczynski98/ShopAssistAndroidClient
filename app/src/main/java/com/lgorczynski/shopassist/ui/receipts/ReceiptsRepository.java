@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.NavController;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 
 import java.io.File;
@@ -129,17 +130,20 @@ public class ReceiptsRepository {
                 });
     }
 
-    public void deleteReceipt(int receiptID, String token){
+    public void deleteReceipt(int receiptID, String token, BottomSheetDialog bottomSheetDialog){
         receiptsService.deleteReceipt(receiptID, token)
                 .enqueue(new Callback<Receipt>() {
                     @Override
                     public void onResponse(Call<Receipt> call, Response<Receipt> response) {
                         Log.d(TAG, "onDeleteResponse: Receipt deleted succesfully");
+                        getReceipts(token);
+                        bottomSheetDialog.cancel();
                     }
 
                     @Override
                     public void onFailure(Call<Receipt> call, Throwable t) {
                         Log.d(TAG, "onDeleteFailure: Error");
+                        bottomSheetDialog.cancel();
                     }
                 });
     }
