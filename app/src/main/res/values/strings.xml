@@ -46,4 +46,5 @@
     <string name="purchase_cost">Purchase Cost</string>
     <string name="return_to">Return to</string>
     <string name="print_receipt">Print receipt</string>
+    <string name="download_receipts_local_copy">Create a local copy of all the receipt scans</string>
 </resources>

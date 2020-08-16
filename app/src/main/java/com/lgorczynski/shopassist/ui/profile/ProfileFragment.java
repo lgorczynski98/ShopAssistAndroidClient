@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
@@ -16,18 +19,40 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.lgorczynski.shopassist.R;
+import com.lgorczynski.shopassist.ui.CredentialsSingleton;
+import com.lgorczynski.shopassist.ui.ImageFileCreator;
+import com.lgorczynski.shopassist.ui.receipts.Receipt;
+import com.lgorczynski.shopassist.ui.receipts.ReceiptsViewModel;
+
+import java.util.List;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener{
 
-    private ProfileViewModel profileViewModel;
-
     private NavController navController;
+    private LinearLayout settingsLayout;
+    private LinearLayout downloadLocalCopyLayout;
+    private ReceiptsViewModel receiptsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        profileViewModel =
-                ViewModelProviders.of(this).get(ProfileViewModel.class);
+        receiptsViewModel =
+                ViewModelProviders.of(this).get(ReceiptsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        final Button logOutButton = root.findViewById(R.id.profile_log_out_button);
+        final Button settingButton = root.findViewById(R.id.profile_settings_button);
+        final Button licenceButton = root.findViewById(R.id.profile_licence_button);
+        final Button aboutButton = root.findViewById(R.id.profile_about_us_button);
+        settingsLayout = root.findViewById(R.id.profile_settings_layout);
+        downloadLocalCopyLayout = root.findViewById(R.id.profile_settings_layout_download_copy);
+        downloadLocalCopyLayout.setOnClickListener(this);
+        logOutButton.setOnClickListener(this);
+        settingButton.setOnClickListener(this);
+        licenceButton.setOnClickListener(this);
+        aboutButton.setOnClickListener(this);
+
+        receiptsViewModel.getReceipts(CredentialsSingleton.getInstance().getToken());
+
         return root;
     }
 
@@ -35,17 +60,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
-
-        final Button logOutButton = view.findViewById(R.id.profile_log_out_button);
-        final Button settingButton = view.findViewById(R.id.profile_setting_button);
-        final Button profileInfoButton = view.findViewById(R.id.profile_change_profile_info_button);
-        final Button licenceButton = view.findViewById(R.id.profile_licence_button);
-        final Button aboutButton = view.findViewById(R.id.profile_about_us_button);
-        logOutButton.setOnClickListener(this);
-        settingButton.setOnClickListener(this);
-        profileInfoButton.setOnClickListener(this);
-        licenceButton.setOnClickListener(this);
-        aboutButton.setOnClickListener(this);
     }
 
     @Override
@@ -59,12 +73,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 navController.navigate(R.id.action_navigation_profile_to_logInFragment);
                 break;
             }
-            case R.id.profile_setting_button:{
-                navController.navigate(R.id.action_navigation_profile_to_settingsFragment);
-                break;
-            }
-            case R.id.profile_change_profile_info_button:{
-                navController.navigate(R.id.action_navigation_profile_to_profileInfoFragment);
+            case R.id.profile_settings_button:{
+                if(settingsLayout.getVisibility() == View.VISIBLE)
+                    settingsLayout.setVisibility(View.GONE);
+                else
+                    settingsLayout.setVisibility(View.VISIBLE);
                 break;
             }
             case R.id.profile_licence_button:{
@@ -74,6 +87,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
             case R.id.profile_about_us_button:{
                 navController.navigate(R.id.action_navigation_profile_to_aboutFragment);
                 break;
+            }
+            case R.id.profile_settings_layout_download_copy:{
+                List<Receipt> receipts = receiptsViewModel.getReceiptsResponseLiveData().getValue();
+                ImageFileCreator imageFileCreator = new ImageFileCreator(getContext());
+                imageFileCreator.createReceiptsImageFiles(receipts);
             }
         }
     }
