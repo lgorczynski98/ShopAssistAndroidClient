@@ -6,12 +6,16 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +35,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
+import com.lgorczynski.shopassist.MainActivity;
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.CaptureActivityPortrait;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
@@ -55,6 +60,7 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
                 ViewModelProviders.of(this).get(LoyaltyCardsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_loyalty_cards, container, false);
 
+        setHasOptionsMenu(true);
         //recycler view z kartami lojalnosciowymi
         recyclerView = root.findViewById(R.id.loyalty_cards_recycler_view);
         loyaltyCardsViewModel.getLoyaltyCardsResponseLiveData().observe(this, new Observer<List<LoyaltyCard>>() {
@@ -81,6 +87,34 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
 
         navController = Navigation.findNavController(view);
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.search_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = new SearchView(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
+        searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        searchItem.setActionView(searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                try {
+                    adapter.getFilter().filter(s);
+                }
+                catch(NullPointerException e) {
+                    Log.d(TAG, "onQueryTextChange: Null adapter???");
+                }
+                return false;
+            }
+        });
+    }
+
 
     private void startScanning(){
         IntentIntegrator integrator= IntentIntegrator.forSupportFragment(this);

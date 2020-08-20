@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,20 +20,28 @@ import com.lgorczynski.shopassist.ui.CustomPicasso;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ReceiptRecyclerViewAdapter extends RecyclerView.Adapter<ReceiptRecyclerViewAdapter.ViewHolder>{
+public class ReceiptRecyclerViewAdapter extends RecyclerView.Adapter<ReceiptRecyclerViewAdapter.ViewHolder> implements Filterable {
 
     private static final String TAG = "ReceiptRecyclerViewAdap";
 
     private List<Receipt> mReceipts;
+    private List<Receipt> mAllReceipts;
     private Context mContext;
     private OnReceiptClickListener mOnReceiptClickListener;
 
     private CustomPicasso customPicasso;
 
     public ReceiptRecyclerViewAdapter(Context mContext, List<Receipt> mReceipts, OnReceiptClickListener onReceiptClickListener) {
-        this.mReceipts = mReceipts;
+        this.mAllReceipts = mReceipts;
+        try {
+            this.mReceipts = new ArrayList<>(mReceipts);
+        }
+        catch(NullPointerException e) {
+            this.mReceipts = new ArrayList<>();
+        }
         this.mContext = mContext;
         this.mOnReceiptClickListener = onReceiptClickListener;
         this.customPicasso = new CustomPicasso(mContext);
@@ -114,4 +124,56 @@ public class ReceiptRecyclerViewAdapter extends RecyclerView.Adapter<ReceiptRecy
         void onReceiptClick(int position);
         void onSettingsClick(int position);
     }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    private Filter filter = new Filter() {
+
+        private int previousPatternLenght = 0;
+
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            List<Receipt> filteredList = new ArrayList<>();
+            if(charSequence == null || charSequence.length() == 0){
+                filteredList.addAll(mAllReceipts);
+                previousPatternLenght = 0;
+            }
+            else{
+                if(previousPatternLenght > charSequence.length()){
+                    try {
+                        mReceipts = new ArrayList<>(mAllReceipts);
+                    }
+                    catch(NullPointerException e) {
+                        mReceipts = new ArrayList<>();
+                    }
+                }
+                String filterPattern = charSequence.toString().toLowerCase().trim();
+                for(Receipt receipt : mReceipts){
+                    if(receipt.getTitle().toLowerCase().contains(filterPattern)
+                    || receipt.getShopName().toLowerCase().contains(filterPattern)){
+                        filteredList.add(receipt);
+                    }
+                }
+                previousPatternLenght = charSequence.length();
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            mReceipts.clear();
+            try {
+                mReceipts.addAll((List)filterResults.values);
+            }
+            catch(NullPointerException e) {
+                Log.d(TAG, "publishResults: No results to be displayed");
+            }
+            notifyDataSetChanged();
+        }
+    };
 }

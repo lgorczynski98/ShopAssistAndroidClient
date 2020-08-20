@@ -17,8 +17,7 @@ public class LicenceFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_licence, container, false);
-        final TextView textView = root.findViewById(R.id.text_licence);
-        textView.setText("Licence fragment");
+
         return root;
     }
 }

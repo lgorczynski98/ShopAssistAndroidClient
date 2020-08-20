@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,12 +20,14 @@ import com.lgorczynski.shopassist.ui.CustomPicasso;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class LoyaltyCardRecyclerViewAdapter extends RecyclerView.Adapter<LoyaltyCardRecyclerViewAdapter.ViewHolder>{
+public class LoyaltyCardRecyclerViewAdapter extends RecyclerView.Adapter<LoyaltyCardRecyclerViewAdapter.ViewHolder> implements Filterable {
 
     private static final String TAG = "LoyaltyCardRecyclerView";
 
+    private List<LoyaltyCard> mAllLoyaltyCards;
     private List<LoyaltyCard> mLoyaltyCards;
     private Context mContext;
     private OnCardClickListener mOnCardClickListener;
@@ -31,7 +35,13 @@ public class LoyaltyCardRecyclerViewAdapter extends RecyclerView.Adapter<Loyalty
     private CustomPicasso customPicasso;
 
     public LoyaltyCardRecyclerViewAdapter(Context mContext, List<LoyaltyCard> mLoyaltyCards, OnCardClickListener onCardClickListener) {
-        this.mLoyaltyCards = mLoyaltyCards;
+        this.mAllLoyaltyCards = mLoyaltyCards;
+        try {
+            this.mLoyaltyCards = new ArrayList<>(mLoyaltyCards);
+        }
+        catch(NullPointerException e) {
+            this.mLoyaltyCards = new ArrayList<>();
+        }
         this.mContext = mContext;
         this.mOnCardClickListener = onCardClickListener;
         this.customPicasso = new CustomPicasso(mContext);
@@ -109,4 +119,54 @@ public class LoyaltyCardRecyclerViewAdapter extends RecyclerView.Adapter<Loyalty
         void onCardClick(int position);
         void onSettingClick(int position);
     }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+
+    private Filter filter = new Filter() {
+
+        private int previousPatternLenght = 0;
+
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            List<LoyaltyCard> filteredList = new ArrayList<>();
+            if(charSequence == null || charSequence.length() == 0){
+                filteredList.addAll(mAllLoyaltyCards);
+                previousPatternLenght = 0;
+            }
+            else{
+                if(previousPatternLenght > charSequence.length()){
+                    try {
+                        mLoyaltyCards = new ArrayList<>(mAllLoyaltyCards);
+                    }
+                    catch(NullPointerException e) {
+                        mLoyaltyCards = new ArrayList<>();
+                    }
+                }
+                String filterPattern = charSequence.toString().toLowerCase().trim();
+                for(LoyaltyCard loyaltyCard : mLoyaltyCards){
+                    if(loyaltyCard.getTitle().toLowerCase().contains(filterPattern))
+                        filteredList.add(loyaltyCard);
+                }
+                previousPatternLenght = charSequence.length();
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            mLoyaltyCards.clear();
+            try {
+                mLoyaltyCards.addAll((List)filterResults.values);
+            }
+            catch(NullPointerException e) {
+                Log.d(TAG, "publishResults: No result to be displayed");
+            }
+            notifyDataSetChanged();
+        }
+    };
 }

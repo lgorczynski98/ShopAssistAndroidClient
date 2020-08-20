@@ -76,20 +76,6 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
-        <action
-            android:id="@+id/action_navigation_profile_to_profileInfoFragment"
-            app:destination="@id/profileInfoFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
-        <action
-            android:id="@+id/action_navigation_profile_to_settingsFragment"
-            app:destination="@id/settingsFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/logInFragment"
@@ -129,16 +115,6 @@
         android:name="com.lgorczynski.shopassist.ui.licence.LicenceFragment"
         android:label="@string/licence"
         tools:layout="@layout/fragment_licence" />
-    <fragment
-        android:id="@+id/profileInfoFragment"
-        android:name="com.lgorczynski.shopassist.ui.profile_info.ProfileInfoFragment"
-        android:label="@string/change_profile_info"
-        tools:layout="@layout/fragment_profile_info" />
-    <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.lgorczynski.shopassist.ui.settings.SettingsFragment"
-        android:label="@string/settings"
-        tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/loyaltyCardFormFragment"
         android:name="com.lgorczynski.shopassist.ui.loyalty_cards.LoyaltyCardFormFragment"

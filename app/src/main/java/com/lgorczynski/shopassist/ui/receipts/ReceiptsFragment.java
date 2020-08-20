@@ -3,11 +3,16 @@ package com.lgorczynski.shopassist.ui.receipts;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.lgorczynski.shopassist.MainActivity;
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ReceiptScannerActivity;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
@@ -32,6 +38,7 @@ import java.util.List;
 
 public class ReceiptsFragment extends Fragment implements ReceiptRecyclerViewAdapter.OnReceiptClickListener{
 
+    private static final String TAG = "ReceiptsFragment";
     private ReceiptsViewModel receiptsViewModel;
 
     private RecyclerView recyclerView;
@@ -47,6 +54,7 @@ public class ReceiptsFragment extends Fragment implements ReceiptRecyclerViewAda
                 ViewModelProviders.of(this).get(ReceiptsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_receipts, container, false);
 
+        setHasOptionsMenu(true);
         recyclerView = root.findViewById(R.id.receipt_recycler_view);
         receiptsViewModel.getReceiptsResponseLiveData().observe(this, new Observer<List<Receipt>>() {
             @Override
@@ -69,6 +77,33 @@ public class ReceiptsFragment extends Fragment implements ReceiptRecyclerViewAda
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.search_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = new SearchView(((MainActivity)getContext()).getSupportActionBar().getThemedContext());
+        searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        searchItem.setActionView(searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                try {
+                    adapter.getFilter().filter(s);
+                }
+                catch(NullPointerException e) {
+                    Log.d(TAG, "onQueryTextChange: Null adapter ???");
+                }
+                return false;
+            }
+        });
     }
 
     private void startScanningReceipt(){
