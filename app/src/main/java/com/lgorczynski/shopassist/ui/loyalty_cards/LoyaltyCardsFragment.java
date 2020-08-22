@@ -42,7 +42,7 @@ import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 
 import java.util.List;
 
-public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecyclerViewAdapter.OnCardClickListener, View.OnClickListener{
+public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecyclerViewAdapter.OnCardClickListener, View.OnClickListener, ShareDialog.ShareDialogListener {
 
     private static final String TAG = "LoyaltyCardsFragment";
     private static final String LOYALTYCARDS_IMAGE_BASE_URL = CredentialsSingleton.BASE_URL + "loyaltycards/image/";
@@ -53,6 +53,7 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
     private LoyaltyCardRecyclerViewAdapter adapter;
 
     private NavController navController;
+    private BottomSheetDialog bottomSheetDialog;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -179,7 +180,7 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
     @Override
     public void onSettingClick(int position) {
         LoyaltyCard card = adapter.getItemOnPosition(position);
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+        bottomSheetDialog = new BottomSheetDialog(getContext());
         bottomSheetDialog.setContentView(R.layout.loyalty_cards_settings_bottom_sheet_dialog);
         bottomSheetDialog.setCanceledOnTouchOutside(true);
 
@@ -217,9 +218,16 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.loyalty_cards_settings_bottom_sheet_dialog_share_layout:{
-                Toast.makeText(getContext(), "Clicked on share", Toast.LENGTH_SHORT).show();
+                ShareDialog shareDialog = new ShareDialog(this);
+                shareDialog.show(getActivity().getSupportFragmentManager(), "share_dialog");
                 break;
             }
         }
+    }
+
+    @Override
+    public void onShare(String username) {
+        bottomSheetDialog.dismiss();
+        Toast.makeText(getContext(), "Shared with: " + username, Toast.LENGTH_SHORT).show();
     }
 }

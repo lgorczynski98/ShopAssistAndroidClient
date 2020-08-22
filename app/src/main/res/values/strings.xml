@@ -46,6 +46,7 @@
     <string name="purchase_cost">Purchase Cost</string>
     <string name="return_to">Return to</string>
     <string name="print_receipt">Print receipt</string>
+    <string name="share_setting_title">Share loyalty card with</string>
     <string name="download_receipts_local_copy">Create a local copy of all the receipt scans</string>
     <string name="text_about_loyalty_cards">Shop Assist is an app that allows you to store all your loyalty cards in one place. It slims down your wallet and let\'s you do your shopping without concerns that you\'ll miss your discounts!</string>
     <string name="text_about_receipts">Shop Assist also provides you opportunity to store your receipts for later use such as return purchased items, warranty, receipt lotteries. Your receipts will never come fade!</string>
