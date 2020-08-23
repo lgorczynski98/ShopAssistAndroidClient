@@ -19,8 +19,8 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -35,9 +35,9 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
+import com.lgorczynski.shopassist.CaptureActivityPortrait;
 import com.lgorczynski.shopassist.MainActivity;
 import com.lgorczynski.shopassist.R;
-import com.lgorczynski.shopassist.CaptureActivityPortrait;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 
 import java.util.List;
@@ -230,4 +230,5 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
         bottomSheetDialog.dismiss();
         Toast.makeText(getContext(), "Shared with: " + username, Toast.LENGTH_SHORT).show();
     }
+
 }

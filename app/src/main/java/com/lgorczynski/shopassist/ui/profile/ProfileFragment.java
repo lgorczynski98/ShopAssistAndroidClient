@@ -21,6 +21,7 @@ import androidx.navigation.Navigation;
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 import com.lgorczynski.shopassist.ui.ImageFileCreator;
+import com.lgorczynski.shopassist.ui.log_in.LogInViewModel;
 import com.lgorczynski.shopassist.ui.receipts.Receipt;
 import com.lgorczynski.shopassist.ui.receipts.ReceiptsViewModel;
 
@@ -69,7 +70,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_token), Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString(getString(R.string.token), null);
+                editor.putInt("user_id", -1);
                 editor.apply();
+
+                LogInViewModel logInViewModel = ViewModelProviders.of(this).get(LogInViewModel.class);
+                logInViewModel.patchAccountDetails(CredentialsSingleton.getInstance().getUserID(), "", CredentialsSingleton.getInstance().getToken());
+
                 navController.navigate(R.id.action_navigation_profile_to_logInFragment);
                 break;
             }
