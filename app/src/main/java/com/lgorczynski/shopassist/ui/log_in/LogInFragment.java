@@ -60,7 +60,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
                 editor.putString(getString(R.string.token), CredentialsSingleton.getInstance().getToken());
                 editor.putInt("user_id", CredentialsSingleton.getInstance().getUserID());
                 editor.apply();
-                getAccountDetails();
+                logInViewModel.getAccountDetails();
                 navController.navigate(R.id.action_logInFragment_to_navigation_home);
             }
         });
@@ -79,7 +79,7 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
         if(sharedPrefToken != null && sharedPrefUserID != -1){
             CredentialsSingleton.getInstance().setToken(sharedPrefToken);
             CredentialsSingleton.getInstance().setUserID(sharedPrefUserID);
-            getAccountDetails();
+            logInViewModel.getAccountDetails();
             navController.navigate(R.id.action_logInFragment_to_navigation_home);
         }
     }
@@ -98,25 +98,5 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
                 navController.navigate(R.id.action_logInFragment_to_registerFragment);
             }
         }
-    }
-
-    private void getAccountDetails(){
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "getInstanceId failed", task.getException());
-                            return;
-                        }
-
-                        // Get new Instance ID token
-                        String token = task.getResult().getToken();
-                        Log.d(TAG, "onComplete: Current device registration token: " + token);
-                        CredentialsSingleton.getInstance().setDeviceRegistrationToken(token);
-                        logInViewModel.getAccountDetails(CredentialsSingleton.getInstance().getUserID(), CredentialsSingleton.getInstance().getToken());
-                    }
-                });
-
     }
 }

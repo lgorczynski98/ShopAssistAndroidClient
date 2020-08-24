@@ -5,7 +5,9 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,11 +23,13 @@ import android.widget.EditText;
 
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
+import com.lgorczynski.shopassist.ui.log_in.LogInViewModel;
 import com.lgorczynski.shopassist.ui.log_in.LoginResponse;
 
 public class RegisterFragment extends Fragment implements View.OnClickListener {
 
     private RegisterViewModel registerViewModel;
+    private LogInViewModel logInViewModel;
 
     private NavController navController;
 
@@ -38,6 +42,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                              ViewGroup container, Bundle savedInstanceState) {
         registerViewModel =
                 ViewModelProviders.of(this).get(RegisterViewModel.class);
+        logInViewModel =
+                ViewModelProviders.of(this).get(LogInViewModel.class);
         View root = inflater.inflate(R.layout.fragment_register, container, false);
 
         emailText = root.findViewById(R.id.register_email_input);
@@ -58,6 +64,13 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         CredentialsSingleton.getInstance().setToken("Token " + loginResponse.getToken());
+                        CredentialsSingleton.getInstance().setUserID(loginResponse.getUserID());
+                        SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_token), Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString(getString(R.string.token), CredentialsSingleton.getInstance().getToken());
+                        editor.putInt("user_id", CredentialsSingleton.getInstance().getUserID());
+                        editor.apply();
+                        logInViewModel.getAccountDetails();
                         navController.navigate(R.id.action_registerFragment_to_navigation_loyalty_cards);
                     }
                 });
