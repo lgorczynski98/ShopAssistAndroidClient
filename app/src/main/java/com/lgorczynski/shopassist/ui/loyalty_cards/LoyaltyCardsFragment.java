@@ -42,7 +42,7 @@ import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 
 import java.util.List;
 
-public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecyclerViewAdapter.OnCardClickListener, View.OnClickListener, ShareDialog.ShareDialogListener {
+public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecyclerViewAdapter.OnCardClickListener, ShareDialog.ShareDialogListener {
 
     private static final String TAG = "LoyaltyCardsFragment";
     private static final String LOYALTYCARDS_IMAGE_BASE_URL = CredentialsSingleton.BASE_URL + "loyaltycards/image/";
@@ -64,13 +64,17 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
         setHasOptionsMenu(true);
         //recycler view z kartami lojalnosciowymi
         recyclerView = root.findViewById(R.id.loyalty_cards_recycler_view);
-        loyaltyCardsViewModel.getLoyaltyCardsResponseLiveData().observe(this, new Observer<List<LoyaltyCard>>() {
-            @Override
-            public void onChanged(List<LoyaltyCard> loyaltyCards) {
-                adapter = new LoyaltyCardRecyclerViewAdapter(getContext(), loyaltyCards, LoyaltyCardsFragment.this);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                recyclerView.setAdapter(adapter);
-            }
+        loyaltyCardsViewModel.getLoyaltyCardsResponseLiveData().observe(this, loyaltyCards -> {
+            adapter = new LoyaltyCardRecyclerViewAdapter(getContext(), loyaltyCards, LoyaltyCardsFragment.this);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.setAdapter(adapter);
+        });
+
+        loyaltyCardsViewModel.getShareResponseLiveData().observe(this, shareResponse -> {
+            if(shareResponse.getDetail() != null)
+                Toast.makeText(getContext(), shareResponse.getDetail(), Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(getContext(), "Shared successfully", Toast.LENGTH_SHORT).show();
         });
 
         loyaltyCardsViewModel.getLoyaltyCards(CredentialsSingleton.getInstance().getToken());
@@ -191,7 +195,10 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
         final LinearLayout edit = bottomSheetDialog.findViewById(R.id.loyalty_cards_settings_bottom_sheet_dialog_edit_layout);
         final LinearLayout delete = bottomSheetDialog.findViewById(R.id.loyalty_cards_settings_bottom_sheet_dialog_delete_layout);
 
-        share.setOnClickListener(this);
+        share.setOnClickListener(view -> {
+            ShareDialog shareDialog = new ShareDialog(this, card.getId());
+            shareDialog.show(getActivity().getSupportFragmentManager(), "share_dialog");
+        });
         edit.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putInt("id", card.getId());
@@ -213,22 +220,11 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
         bottomSheetDialog.show();
     }
 
-    //setting buttons
     @Override
-    public void onClick(View view) {
-        switch(view.getId()){
-            case R.id.loyalty_cards_settings_bottom_sheet_dialog_share_layout:{
-                ShareDialog shareDialog = new ShareDialog(this);
-                shareDialog.show(getActivity().getSupportFragmentManager(), "share_dialog");
-                break;
-            }
-        }
-    }
-
-    @Override
-    public void onShare(String username) {
+    public void onShare(String username, int cardID) {
         bottomSheetDialog.dismiss();
-        Toast.makeText(getContext(), "Shared with: " + username, Toast.LENGTH_SHORT).show();
+        loyaltyCardsViewModel.shareLoyaltyCard(cardID, username, CredentialsSingleton.getInstance().getToken());
+        Toast.makeText(getContext(), "Sending...", Toast.LENGTH_SHORT).show();
     }
 
 }

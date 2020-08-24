@@ -16,9 +16,11 @@ public class ShareDialog extends AppCompatDialogFragment{
 
     private EditText editTextUsername;
     private ShareDialogListener shareDialogListener;
+    private int cardID;
 
-    public ShareDialog(ShareDialogListener shareDialogListener){
+    public ShareDialog(ShareDialogListener shareDialogListener, int cardID){
         this.shareDialogListener = shareDialogListener;
+        this.cardID = cardID;
     }
 
     @Override
@@ -31,12 +33,14 @@ public class ShareDialog extends AppCompatDialogFragment{
         builder.setView(view)
                 .setTitle(R.string.share)
                 .setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.dismiss())
-                .setPositiveButton(R.string.share, ((dialogInterface, i) -> shareDialogListener.onShare(editTextUsername.getText().toString())));
+                .setPositiveButton(R.string.share, ((dialogInterface, i) -> {
+                    shareDialogListener.onShare(editTextUsername.getText().toString(), cardID);
+                }));
 
         return builder.create();
     }
 
     interface ShareDialogListener{
-        void onShare(String username);
+        void onShare(String username, int cardID);
     }
 }

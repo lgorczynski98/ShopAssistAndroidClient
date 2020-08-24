@@ -49,20 +49,17 @@ public class LogInFragment extends Fragment implements View.OnClickListener {
         signInButton.setOnClickListener(this);
         registerButton.setOnClickListener(this);
 
-        logInViewModel.getLoginResponseLiveData().observe(this, new Observer<LoginResponse>() {
-            @Override
-            public void onChanged(LoginResponse loginResponse) {
-                CredentialsSingleton.getInstance().setToken("Token " + loginResponse.getToken());
-                CredentialsSingleton.getInstance().setUserID(loginResponse.getUserID());
-                Log.d(TAG, "onChanged: User\'s token: " + loginResponse.getToken());
-                SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_token), Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(getString(R.string.token), CredentialsSingleton.getInstance().getToken());
-                editor.putInt("user_id", CredentialsSingleton.getInstance().getUserID());
-                editor.apply();
-                logInViewModel.getAccountDetails();
-                navController.navigate(R.id.action_logInFragment_to_navigation_home);
-            }
+        logInViewModel.getLoginResponseLiveData().observe(this, loginResponse -> {
+            CredentialsSingleton.getInstance().setToken("Token " + loginResponse.getToken());
+            CredentialsSingleton.getInstance().setUserID(loginResponse.getUserID());
+            Log.d(TAG, "onChanged: User\'s token: " + loginResponse.getToken());
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_token), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(getString(R.string.token), CredentialsSingleton.getInstance().getToken());
+            editor.putInt("user_id", CredentialsSingleton.getInstance().getUserID());
+            editor.apply();
+            logInViewModel.getAccountDetails();
+            navController.navigate(R.id.action_logInFragment_to_navigation_home);
         });
 
         return root;

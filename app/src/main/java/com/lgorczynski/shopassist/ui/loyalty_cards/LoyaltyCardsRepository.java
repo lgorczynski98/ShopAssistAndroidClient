@@ -28,11 +28,13 @@ public class LoyaltyCardsRepository {
 
     private LoyaltyCardsService loyaltyCardsService;
     private MutableLiveData<List<LoyaltyCard>> loyaltyCardsResponseMutableLiveData;
+    private MutableLiveData<ShareResponse> shareResponseMutableLiveData;
 
     private NavController navController;
 
     public LoyaltyCardsRepository(){
         loyaltyCardsResponseMutableLiveData = new MutableLiveData<>();
+        shareResponseMutableLiveData = new MutableLiveData<>();
 
         loyaltyCardsService = new Retrofit.Builder()
                 .baseUrl(LOYALTYCARDS_SERVICE_BASE_URL)
@@ -187,8 +189,28 @@ public class LoyaltyCardsRepository {
                 });
     }
 
+    public void shareLoyaltyCard(int cardID, String username, String token){
+        loyaltyCardsService.shareLoyaltyCard(cardID, username, token)
+                .enqueue(new Callback<ShareResponse>() {
+                    @Override
+                    public void onResponse(Call<ShareResponse> call, Response<ShareResponse> response) {
+                        Log.d(TAG, "onResponse: shared response ok");
+                        shareResponseMutableLiveData.postValue(response.body());
+                    }
+
+                    @Override
+                    public void onFailure(Call<ShareResponse> call, Throwable t) {
+                        Log.d(TAG, "onFailure: failed on sharing");
+                    }
+                });
+    }
+
     public LiveData<List<LoyaltyCard>> getLoyaltyCardsResponseMutableLiveData() {
         return loyaltyCardsResponseMutableLiveData;
+    }
+
+    public MutableLiveData<ShareResponse> getShareResponseMutableLiveData() {
+        return shareResponseMutableLiveData;
     }
 
     public void setNavController(NavController navController) {

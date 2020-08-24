@@ -74,4 +74,11 @@ public interface LoyaltyCardsService {
             @Header("Authorization") String token
     );
 
+    @POST("loyaltycards/share/{card_id}/{usersToShareUsername}/")
+    Call<ShareResponse> shareLoyaltyCard(
+            @Path(value = "card_id", encoded = true) int cardID,
+            @Path(value = "usersToShareUsername", encoded = true) String username,
+            @Header("Authorization") String token
+    );
+
 }

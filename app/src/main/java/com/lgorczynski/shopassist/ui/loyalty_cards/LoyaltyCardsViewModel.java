@@ -14,10 +14,12 @@ public class LoyaltyCardsViewModel extends ViewModel {
     private static final String TAG = "LoyaltyCardsViewModel";
     private LoyaltyCardsRepository loyaltyCardsRepository;
     private LiveData<List<LoyaltyCard>> loyaltyCardsResponseLiveData;
+    private LiveData<ShareResponse> shareResponseLiveData;
 
     public LoyaltyCardsViewModel(){
         loyaltyCardsRepository = new LoyaltyCardsRepository();
         loyaltyCardsResponseLiveData = loyaltyCardsRepository.getLoyaltyCardsResponseMutableLiveData();
+        shareResponseLiveData = loyaltyCardsRepository.getShareResponseMutableLiveData();
     }
 
     public void getLoyaltyCards(String token){
@@ -40,6 +42,10 @@ public class LoyaltyCardsViewModel extends ViewModel {
         return loyaltyCardsResponseLiveData;
     }
 
+    public LiveData<ShareResponse> getShareResponseLiveData() {
+        return shareResponseLiveData;
+    }
+
     public void patchLoyaltyCard(int cardID, String title, String token){
         loyaltyCardsRepository.patchLoyaltyCard(cardID, title, token);
     }
@@ -50,6 +56,10 @@ public class LoyaltyCardsViewModel extends ViewModel {
 
     public void patchLoyaltyCard(int cardID, String title, File image, String token){
         loyaltyCardsRepository.patchLoyaltyCard(cardID, title, image, token);
+    }
+
+    public void shareLoyaltyCard(int cardID, String username, String token){
+        loyaltyCardsRepository.shareLoyaltyCard(cardID, username, token);
     }
 
     public void setRepositoryNavController(NavController navController) {
