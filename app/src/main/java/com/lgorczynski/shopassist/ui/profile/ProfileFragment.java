@@ -22,22 +22,35 @@ import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 import com.lgorczynski.shopassist.ui.ImageFileCreator;
 import com.lgorczynski.shopassist.ui.log_in.LogInViewModel;
+import com.lgorczynski.shopassist.ui.loyalty_cards.ShareDialog;
+import com.lgorczynski.shopassist.ui.profile.dialogs.EmailChangeDialog;
+import com.lgorczynski.shopassist.ui.profile.dialogs.UsernameChangeDialog;
 import com.lgorczynski.shopassist.ui.receipts.Receipt;
 import com.lgorczynski.shopassist.ui.receipts.ReceiptsViewModel;
 
 import java.util.List;
 
-public class ProfileFragment extends Fragment implements View.OnClickListener{
+public class ProfileFragment extends Fragment implements View.OnClickListener, UsernameChangeDialog.UsernameChangeListener, EmailChangeDialog.EmailChangeListener {
 
     private NavController navController;
+
+    private ProfileViewModel profileViewModel;
+
     private LinearLayout settingsLayout;
     private LinearLayout downloadLocalCopyLayout;
+    private LinearLayout usernameChangeLayout;
+    private LinearLayout emailChangeLayout;
+    private LinearLayout passwordChangeLayout;
     private ReceiptsViewModel receiptsViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         receiptsViewModel =
                 ViewModelProviders.of(this).get(ReceiptsViewModel.class);
+
+        profileViewModel =
+                ViewModelProviders.of(this).get(ProfileViewModel.class);
+
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
 
         final Button logOutButton = root.findViewById(R.id.profile_log_out_button);
@@ -47,12 +60,28 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         settingsLayout = root.findViewById(R.id.profile_settings_layout);
         downloadLocalCopyLayout = root.findViewById(R.id.profile_settings_layout_download_copy);
         downloadLocalCopyLayout.setOnClickListener(this);
+        usernameChangeLayout = root.findViewById(R.id.profile_settings_layout_change_username);
+        usernameChangeLayout.setOnClickListener(this);
+        emailChangeLayout = root.findViewById(R.id.profile_settings_layout_change_email);
+        emailChangeLayout.setOnClickListener(this);
+        passwordChangeLayout = root.findViewById(R.id.profile_settings_layout_change_password);
+        passwordChangeLayout.setOnClickListener(this);
         logOutButton.setOnClickListener(this);
         settingButton.setOnClickListener(this);
         licenceButton.setOnClickListener(this);
         aboutButton.setOnClickListener(this);
 
         receiptsViewModel.getReceipts(CredentialsSingleton.getInstance().getToken());
+
+        profileViewModel.getProfileInfoResponseLiveData().observe(this, profileInfoResponse -> {
+            if(profileInfoResponse == null)
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+            else{
+                if(profileInfoResponse.getUsername() != null) CredentialsSingleton.getInstance().setUsername(profileInfoResponse.getUsername());
+                if(profileInfoResponse.getEmail() != null) CredentialsSingleton.getInstance().setEmail(profileInfoResponse.getEmail());
+                if(profileInfoResponse.getDetail() != null) Toast.makeText(getContext(), profileInfoResponse.getDetail(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return root;
     }
@@ -98,7 +127,32 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                 List<Receipt> receipts = receiptsViewModel.getReceiptsResponseLiveData().getValue();
                 ImageFileCreator imageFileCreator = new ImageFileCreator(getContext());
                 imageFileCreator.createReceiptsImageFiles(receipts);
+                break;
+            }
+            case R.id.profile_settings_layout_change_username:{
+                UsernameChangeDialog usernameChangeDialog = new UsernameChangeDialog(this);
+                usernameChangeDialog.show(getActivity().getSupportFragmentManager(), "username_change_dialog");
+                break;
+            }
+            case R.id.profile_settings_layout_change_email:{
+                EmailChangeDialog emailChangeDialog = new EmailChangeDialog(this);
+                emailChangeDialog.show(getActivity().getSupportFragmentManager(), "email_change_dialog");
+                break;
+            }
+            case R.id.profile_settings_layout_change_password:{
+                Toast.makeText(getContext(), "Change password", Toast.LENGTH_SHORT).show();
+                break;
             }
         }
+    }
+
+    @Override
+    public void onUsernameChange(String username) {
+        profileViewModel.changeUsername(username, CredentialsSingleton.getInstance().getToken());
+    }
+
+    @Override
+    public void onEmailChange(String email) {
+        profileViewModel.changeEmail(email, CredentialsSingleton.getInstance().getToken());
     }
 }

@@ -1,6 +1,5 @@
 package com.lgorczynski.shopassist.ui.log_in;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class LoginResponse {
