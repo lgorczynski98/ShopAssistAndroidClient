@@ -26,6 +26,7 @@ public interface ProfileService {
     @POST("/account/changepassword/")
     Call<ProfileInfoResponse> changePassword(
             @Field("password") String password,
+            @Field("new_password") String newPassword,
             @Header("Authorization") String token
     );
 

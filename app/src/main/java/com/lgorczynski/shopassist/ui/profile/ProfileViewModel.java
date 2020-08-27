@@ -23,8 +23,8 @@ public class ProfileViewModel extends ViewModel {
         profileRepository.changeEmail(email, token);
     }
 
-    public void changePassword(String password, String token){
-        profileRepository.changePassword(password, token);
+    public void changePassword(String password, String newPassword, String token){
+        profileRepository.changePassword(password, newPassword, token);
     }
 
     public LiveData<ProfileInfoResponse> getProfileInfoResponseLiveData() {

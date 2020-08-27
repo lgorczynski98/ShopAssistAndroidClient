@@ -28,7 +28,7 @@ public class EmailChangeDialog extends AppCompatDialogFragment {
 
         emailEditText = view.findViewById(R.id.profile_email_change_dialog_username_input);
         builder.setView(view)
-                .setTitle(R.string.profile_change_email_title)
+                .setTitle(R.string.email)
                 .setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.dismiss())
                 .setPositiveButton(R.string.change, (dialogInterface, i) -> {
                     emailChangeListener.onEmailChange(emailEditText.getText().toString());

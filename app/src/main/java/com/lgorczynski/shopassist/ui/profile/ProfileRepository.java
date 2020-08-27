@@ -75,8 +75,8 @@ public class ProfileRepository {
                 });
     }
 
-    public void changePassword(String password, String token){
-        profileService.changePassword(password, token)
+    public void changePassword(String password, String newPassword, String token){
+        profileService.changePassword(password, newPassword, token)
                 .enqueue(new Callback<ProfileInfoResponse>() {
                     @Override
                     public void onResponse(Call<ProfileInfoResponse> call, Response<ProfileInfoResponse> response) {

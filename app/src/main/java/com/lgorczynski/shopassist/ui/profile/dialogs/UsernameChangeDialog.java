@@ -28,7 +28,7 @@ public class UsernameChangeDialog extends AppCompatDialogFragment {
 
         usernameEditText = view.findViewById(R.id.profile_username_change_dialog_username_input);
         builder.setView(view)
-                .setTitle(R.string.profile_change_username_title)
+                .setTitle(R.string.username)
                 .setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.dismiss())
                 .setPositiveButton(R.string.change, (dialogInterface, i) -> {
                     usernameChangeListener.onUsernameChange(usernameEditText.getText().toString());

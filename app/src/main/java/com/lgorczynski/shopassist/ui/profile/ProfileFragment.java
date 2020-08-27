@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -24,17 +25,21 @@ import com.lgorczynski.shopassist.ui.ImageFileCreator;
 import com.lgorczynski.shopassist.ui.log_in.LogInViewModel;
 import com.lgorczynski.shopassist.ui.loyalty_cards.ShareDialog;
 import com.lgorczynski.shopassist.ui.profile.dialogs.EmailChangeDialog;
+import com.lgorczynski.shopassist.ui.profile.dialogs.PasswordChangeDialog;
 import com.lgorczynski.shopassist.ui.profile.dialogs.UsernameChangeDialog;
 import com.lgorczynski.shopassist.ui.receipts.Receipt;
 import com.lgorczynski.shopassist.ui.receipts.ReceiptsViewModel;
 
 import java.util.List;
 
-public class ProfileFragment extends Fragment implements View.OnClickListener, UsernameChangeDialog.UsernameChangeListener, EmailChangeDialog.EmailChangeListener {
+public class ProfileFragment extends Fragment implements View.OnClickListener, UsernameChangeDialog.UsernameChangeListener, EmailChangeDialog.EmailChangeListener, PasswordChangeDialog.PasswordChangeListener {
 
     private NavController navController;
 
     private ProfileViewModel profileViewModel;
+
+    private TextView emailTextView;
+    private TextView usernameTextView;
 
     private LinearLayout settingsLayout;
     private LinearLayout downloadLocalCopyLayout;
@@ -52,6 +57,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
                 ViewModelProviders.of(this).get(ProfileViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        emailTextView = root.findViewById(R.id.profile_info_email_text);
+        usernameTextView = root.findViewById(R.id.profile_info_username_text);
+        emailTextView.setText(CredentialsSingleton.getInstance().getEmail());
+        usernameTextView.setText(CredentialsSingleton.getInstance().getUsername());
 
         final Button logOutButton = root.findViewById(R.id.profile_log_out_button);
         final Button settingButton = root.findViewById(R.id.profile_settings_button);
@@ -77,8 +87,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
             if(profileInfoResponse == null)
                 Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
             else{
-                if(profileInfoResponse.getUsername() != null) CredentialsSingleton.getInstance().setUsername(profileInfoResponse.getUsername());
-                if(profileInfoResponse.getEmail() != null) CredentialsSingleton.getInstance().setEmail(profileInfoResponse.getEmail());
+                if(profileInfoResponse.getUsername() != null) {
+                    CredentialsSingleton.getInstance().setUsername(profileInfoResponse.getUsername());
+                    usernameTextView.setText(profileInfoResponse.getUsername());
+                }
+                if(profileInfoResponse.getEmail() != null) {
+                    CredentialsSingleton.getInstance().setEmail(profileInfoResponse.getEmail());
+                    emailTextView.setText(profileInfoResponse.getEmail());
+                }
                 if(profileInfoResponse.getDetail() != null) Toast.makeText(getContext(), profileInfoResponse.getDetail(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -140,7 +156,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
                 break;
             }
             case R.id.profile_settings_layout_change_password:{
-                Toast.makeText(getContext(), "Change password", Toast.LENGTH_SHORT).show();
+                PasswordChangeDialog passwordChangeDialog = new PasswordChangeDialog(this);
+                passwordChangeDialog.show(getActivity().getSupportFragmentManager(), "password_change_dialog");
                 break;
             }
         }
@@ -154,5 +171,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
     @Override
     public void onEmailChange(String email) {
         profileViewModel.changeEmail(email, CredentialsSingleton.getInstance().getToken());
+    }
+
+    @Override
+    public void onPasswordChange(String password, String newPassword) {
+        profileViewModel.changePassword(password, newPassword, CredentialsSingleton.getInstance().getToken());
     }
 }
