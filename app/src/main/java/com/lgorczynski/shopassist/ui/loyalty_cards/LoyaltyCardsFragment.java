@@ -62,9 +62,16 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
         View root = inflater.inflate(R.layout.fragment_loyalty_cards, container, false);
 
         setHasOptionsMenu(true);
+
+        final TextView noLoyaltyCardsText = root.findViewById(R.id.loyalty_cards_no_cards_text);
+
         //recycler view z kartami lojalnosciowymi
         recyclerView = root.findViewById(R.id.loyalty_cards_recycler_view);
         loyaltyCardsViewModel.getLoyaltyCardsResponseLiveData().observe(this, loyaltyCards -> {
+            if(loyaltyCards.size() == 0)
+                noLoyaltyCardsText.setVisibility(View.VISIBLE);
+            else
+                noLoyaltyCardsText.setVisibility(View.GONE);
             adapter = new LoyaltyCardRecyclerViewAdapter(getContext(), loyaltyCards, LoyaltyCardsFragment.this);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(adapter);

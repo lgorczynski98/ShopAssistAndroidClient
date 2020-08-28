@@ -55,10 +55,16 @@ public class ReceiptsFragment extends Fragment implements ReceiptRecyclerViewAda
         View root = inflater.inflate(R.layout.fragment_receipts, container, false);
 
         setHasOptionsMenu(true);
+
+        final TextView noReceiptsText = root.findViewById(R.id.receipt_no_receipts_text);
+
         recyclerView = root.findViewById(R.id.receipt_recycler_view);
         receiptsViewModel.getReceiptsResponseLiveData().observe(this, new Observer<List<Receipt>>() {
             @Override
             public void onChanged(List<Receipt> receipts) {
+                if(receipts.size() == 0)
+                    noReceiptsText.setVisibility(View.VISIBLE);
+                else noReceiptsText.setVisibility(View.GONE);
                 adapter = new ReceiptRecyclerViewAdapter(getContext(), receipts, ReceiptsFragment.this);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setAdapter(adapter);

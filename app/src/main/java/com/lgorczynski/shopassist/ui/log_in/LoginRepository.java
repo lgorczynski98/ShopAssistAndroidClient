@@ -38,8 +38,8 @@ public class LoginRepository {
                 .enqueue(new Callback<LoginResponse>() {
                     @Override
                     public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                        loginResponseMutableLiveData.postValue(response.body());
                         if(response.isSuccessful()){
-                            loginResponseMutableLiveData.postValue(response.body());
                             Log.d(TAG, "onResponse: " + response.body().getToken());
                         }
                     }
