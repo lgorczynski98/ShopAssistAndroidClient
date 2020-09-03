@@ -117,7 +117,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, U
                 editor.putString(getString(R.string.token), null);
                 editor.putInt("user_id", -1);
                 editor.apply();
-
+                CredentialsSingleton.getInstance().setEmail("");
+                CredentialsSingleton.getInstance().setUsername("");
                 LogInViewModel logInViewModel = ViewModelProviders.of(this).get(LogInViewModel.class);
                 logInViewModel.patchAccountDetails(CredentialsSingleton.getInstance().getUserID(), "", CredentialsSingleton.getInstance().getToken());
 

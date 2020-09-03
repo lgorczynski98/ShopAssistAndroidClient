@@ -1,12 +1,9 @@
 package com.lgorczynski.shopassist.ui.register;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -20,12 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 import com.lgorczynski.shopassist.ui.log_in.LogInViewModel;
-import com.lgorczynski.shopassist.ui.log_in.LoginResponse;
 
 public class RegisterFragment extends Fragment implements View.OnClickListener {
 
@@ -38,6 +35,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
     private EditText usernameText;
     private EditText passwordText;
     private EditText password2Text;
+    private ProgressBar progressBar;
+    private Button signUpButton;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -47,15 +46,17 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
                 ViewModelProviders.of(this).get(LogInViewModel.class);
         View root = inflater.inflate(R.layout.fragment_register, container, false);
 
+        progressBar = root.findViewById(R.id.register_progress_bar);
         emailText = root.findViewById(R.id.register_email_input);
         usernameText = root.findViewById(R.id.register_username_input);
         passwordText = root.findViewById(R.id.register_password_input);
         password2Text = root.findViewById(R.id.register_password2_input);
 
-        final Button signUp = root.findViewById(R.id.sign_up_button);
-        signUp.setOnClickListener(this);
+        signUpButton = root.findViewById(R.id.sign_up_button);
+        signUpButton.setOnClickListener(this);
 
         registerViewModel.getRegisterResponseLiveData().observe(this, registerResponse -> {
+            showRegisterProgressBar(false);
             if(registerResponse == null){
                 Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
                 return;
@@ -95,6 +96,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
             }
             String email = emailText.getText().toString();
             String username = usernameText.getText().toString();
+            showRegisterProgressBar(true);
             registerViewModel.register(email, username, password);
         }
     }
@@ -109,6 +111,21 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         else if(usernameDetail != null)
             message += usernameDetail;
         return message;
+    }
+
+    private void showRegisterProgressBar(boolean show){
+        if(show){
+            signUpButton.setVisibility(View.INVISIBLE);
+            signUpButton.setEnabled(false);
+            signUpButton.setClickable(false);
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        else{
+            progressBar.setVisibility(View.GONE);
+            signUpButton.setClickable(true);
+            signUpButton.setEnabled(true);
+            signUpButton.setVisibility(View.VISIBLE);
+        }
     }
 
 }
