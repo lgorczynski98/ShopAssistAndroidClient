@@ -11,7 +11,7 @@ public interface RegisterService {
 
     @FormUrlEncoded
     @POST("account/register/")
-    Call<LoginResponse> register(
+    Call<RegisterResponse> register(
             @Field("email") String email,
             @Field("username") String username,
             @Field("password") String password

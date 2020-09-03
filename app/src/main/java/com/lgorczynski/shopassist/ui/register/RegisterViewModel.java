@@ -9,18 +9,18 @@ import com.lgorczynski.shopassist.ui.log_in.LoginResponse;
 public class RegisterViewModel extends ViewModel {
 
     private RegisterRepository registerRepository;
-    private LiveData<LoginResponse> loginResponseLiveData;
+    private LiveData<RegisterResponse> registerResponseLiveData;
 
     public RegisterViewModel() {
         registerRepository = new RegisterRepository();
-        loginResponseLiveData = registerRepository.getLoginRepsonseLiveData();
+        registerResponseLiveData = registerRepository.getRegisterResponseLiveData();
     }
 
     public void register(String email, String username, String password){
         registerRepository.registerUser(email, username, password);
     }
 
-    public LiveData<LoginResponse> getLoginResponseLiveData(){
-        return loginResponseLiveData;
+    public LiveData<RegisterResponse> getRegisterResponseLiveData(){
+        return registerResponseLiveData;
     }
 }

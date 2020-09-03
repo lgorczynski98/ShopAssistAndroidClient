@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
@@ -54,28 +55,24 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         final Button signUp = root.findViewById(R.id.sign_up_button);
         signUp.setOnClickListener(this);
 
-        registerViewModel.getLoginResponseLiveData().observe(this, new Observer<LoginResponse>() {
-            @Override
-            public void onChanged(LoginResponse loginResponse) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                alert.setTitle("Token");
-                alert.setMessage(loginResponse.getToken());
-                alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        CredentialsSingleton.getInstance().setToken("Token " + loginResponse.getToken());
-                        CredentialsSingleton.getInstance().setUserID(loginResponse.getUserID());
-                        SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_token), Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString(getString(R.string.token), CredentialsSingleton.getInstance().getToken());
-                        editor.putInt("user_id", CredentialsSingleton.getInstance().getUserID());
-                        editor.apply();
-                        logInViewModel.getAccountDetails();
-                        navController.navigate(R.id.action_registerFragment_to_navigation_loyalty_cards);
-                    }
-                });
-                alert.create().show();
+        registerViewModel.getRegisterResponseLiveData().observe(this, registerResponse -> {
+            if(registerResponse == null){
+                Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+                return;
             }
+            if(registerResponse.getEmailDetail() != null || registerResponse.getUsernameDetail() != null){
+                Toast.makeText(getContext(), getRegisterResponseDetailMessage(registerResponse.getEmailDetail(), registerResponse.getUsernameDetail()), Toast.LENGTH_LONG).show();
+                return;
+            }
+            CredentialsSingleton.getInstance().setToken("Token " + registerResponse.getToken());
+            CredentialsSingleton.getInstance().setUserID(registerResponse.getUserID());
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.preference_token), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(getString(R.string.token), CredentialsSingleton.getInstance().getToken());
+            editor.putInt("user_id", CredentialsSingleton.getInstance().getUserID());
+            editor.apply();
+            logInViewModel.getAccountDetails();
+            navController.navigate(R.id.action_registerFragment_to_navigation_loyalty_cards);
         });
 
         return root;
@@ -93,7 +90,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
             String password = passwordText.getText().toString();
             String password2 = password2Text.getText().toString();
             if(!password.equals(password2)){
-                passwordsAlert();
+                Toast.makeText(getContext(), "Passwords must match", Toast.LENGTH_SHORT).show();
                 return;
             }
             String email = emailText.getText().toString();
@@ -102,12 +99,16 @@ public class RegisterFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void passwordsAlert(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-        alert.setTitle("Error");
-        alert.setMessage("Passwords must match");
-        alert.setCancelable(true);
-        alert.create().show();
+    private String getRegisterResponseDetailMessage(String emailDetail, String usernameDetail){
+        String message = "";
+        if(emailDetail != null){
+            message += emailDetail;
+            if(usernameDetail != null)
+                message += ("\n" + usernameDetail);
+        }
+        else if(usernameDetail != null)
+            message += usernameDetail;
+        return message;
     }
 
 }

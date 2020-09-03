@@ -20,10 +20,10 @@ public class RegisterRepository {
     private static final String TAG = "RegisterRepository";
 
     private RegisterService registerService;
-    private MutableLiveData<LoginResponse> loginResponseMutableLiveData;
+    private MutableLiveData<RegisterResponse> registerResponseMutableLiveData;
 
     public RegisterRepository(){
-        loginResponseMutableLiveData = new MutableLiveData<>();
+        registerResponseMutableLiveData = new MutableLiveData<>();
 
         registerService = new Retrofit.Builder()
                 .baseUrl(REGISTER_SERVICE_BASE_URL)
@@ -34,25 +34,25 @@ public class RegisterRepository {
 
     public void registerUser(String email, String username, String password){
         registerService.register(email, username, password)
-                .enqueue(new Callback<LoginResponse>() {
+                .enqueue(new Callback<RegisterResponse>() {
                     @Override
-                    public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                    public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
                         if(response.isSuccessful()){
-                            loginResponseMutableLiveData.postValue(response.body());
+                            registerResponseMutableLiveData.postValue(response.body());
                             Log.d(TAG, "onResponse: " + response.body().getToken());
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<LoginResponse> call, Throwable t) {
-                        loginResponseMutableLiveData.postValue(null);
+                    public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                        registerResponseMutableLiveData.postValue(null);
                         Log.d(TAG, "onFailure: " + t.getMessage());
                     }
                 });
     }
 
-    public LiveData<LoginResponse> getLoginRepsonseLiveData(){
-        return loginResponseMutableLiveData;
+    public LiveData<RegisterResponse> getRegisterResponseLiveData(){
+        return registerResponseMutableLiveData;
     }
 
 }
