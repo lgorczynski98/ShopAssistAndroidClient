@@ -9,6 +9,7 @@ public class CredentialsSingleton {
     private int userID;
     private String deviceRegistrationToken;
     public static final String BASE_URL = "https://shopassist.azurewebsites.net/";
+    public static final String SERVER_CONNECTION_ADDRESS = "https://shopassist.azurewebsites.net";
     public static final String RECEIPTS_IMAGE_BASE_URL = CredentialsSingleton.BASE_URL + "receipts/image/";
     public static final String RECEIPTS_THUMBNAIL_BASE_URL = CredentialsSingleton.BASE_URL + "receipts/thumbnail/";
     public static final String LOYALTYCARDS_IMAGE_BASE_URL = CredentialsSingleton.BASE_URL + "loyaltycards/image/";

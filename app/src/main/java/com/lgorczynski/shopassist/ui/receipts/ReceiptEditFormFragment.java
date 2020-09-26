@@ -6,19 +6,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
-import com.lgorczynski.shopassist.ui.CustomPicasso;
-import com.lgorczynski.shopassist.ui.ImageFileCreator;
-import com.lgorczynski.shopassist.ui.ImageScaler;
+import com.lgorczynski.shopassist.image_managing.CustomPicasso;
+import com.lgorczynski.shopassist.image_managing.ImageFileCreator;
+import com.lgorczynski.shopassist.image_managing.ImageScaler;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;

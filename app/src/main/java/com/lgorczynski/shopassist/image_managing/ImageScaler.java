@@ -1,4 +1,4 @@
-package com.lgorczynski.shopassist.ui;
+package com.lgorczynski.shopassist.image_managing;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

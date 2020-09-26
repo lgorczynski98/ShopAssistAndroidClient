@@ -3,10 +3,8 @@ package com.lgorczynski.shopassist.ui.loyalty_cards;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,18 +29,12 @@ import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
-import com.lgorczynski.shopassist.ui.ImageFileCreator;
-import com.lgorczynski.shopassist.ui.ImageScaler;
+import com.lgorczynski.shopassist.image_managing.ImageFileCreator;
+import com.lgorczynski.shopassist.image_managing.ImageScaler;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class LoyaltyCardFormFragment extends Fragment implements View.OnClickListener{
 

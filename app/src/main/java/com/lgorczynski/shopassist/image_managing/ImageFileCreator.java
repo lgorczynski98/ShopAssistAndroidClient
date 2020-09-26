@@ -1,4 +1,4 @@
-package com.lgorczynski.shopassist.ui;
+package com.lgorczynski.shopassist.image_managing;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 import com.lgorczynski.shopassist.ui.receipts.Receipt;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;

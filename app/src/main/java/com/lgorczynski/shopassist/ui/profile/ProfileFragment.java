@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,9 +20,8 @@ import androidx.navigation.Navigation;
 
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
-import com.lgorczynski.shopassist.ui.ImageFileCreator;
+import com.lgorczynski.shopassist.image_managing.ImageFileCreator;
 import com.lgorczynski.shopassist.ui.log_in.LogInViewModel;
-import com.lgorczynski.shopassist.ui.loyalty_cards.ShareDialog;
 import com.lgorczynski.shopassist.ui.profile.dialogs.EmailChangeDialog;
 import com.lgorczynski.shopassist.ui.profile.dialogs.PasswordChangeDialog;
 import com.lgorczynski.shopassist.ui.profile.dialogs.UsernameChangeDialog;

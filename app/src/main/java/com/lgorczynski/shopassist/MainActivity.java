@@ -18,11 +18,19 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.lgorczynski.shopassist.connections.ConnectionChecker;
+import com.lgorczynski.shopassist.connections.ConnectionService;
+import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 
 import org.opencv.android.OpenCVLoader;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivityTAG";
     private NavController navController;
 
     @Override
@@ -59,5 +67,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "Started checking internet connection");
+
+        ConnectionChecker connectionChecker = new ConnectionChecker(this);
+        connectionChecker.checkConnections();
     }
 }

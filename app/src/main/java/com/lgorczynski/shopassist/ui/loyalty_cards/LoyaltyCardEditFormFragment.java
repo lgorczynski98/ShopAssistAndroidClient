@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 
 import com.lgorczynski.shopassist.R;
-import com.lgorczynski.shopassist.ui.CustomPicasso;
+import com.lgorczynski.shopassist.image_managing.CustomPicasso;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
-import com.lgorczynski.shopassist.ui.ImageScaler;
+import com.lgorczynski.shopassist.image_managing.ImageScaler;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;

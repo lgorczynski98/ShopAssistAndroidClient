@@ -17,10 +17,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.print.PrintHelper;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lgorczynski.shopassist.R;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
-import com.lgorczynski.shopassist.ui.CustomPicasso;
+import com.lgorczynski.shopassist.image_managing.CustomPicasso;
 import com.squareup.picasso.Picasso;
 
 public class ReceiptPreviewFragment extends Fragment implements View.OnClickListener {

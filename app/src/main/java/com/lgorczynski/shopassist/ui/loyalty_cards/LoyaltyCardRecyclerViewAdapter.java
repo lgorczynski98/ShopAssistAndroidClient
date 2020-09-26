@@ -16,7 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lgorczynski.shopassist.R;
-import com.lgorczynski.shopassist.ui.CustomPicasso;
+import com.lgorczynski.shopassist.image_managing.CustomPicasso;
 import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 import com.squareup.picasso.Picasso;
 

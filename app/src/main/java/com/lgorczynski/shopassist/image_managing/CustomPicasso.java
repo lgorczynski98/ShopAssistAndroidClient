@@ -1,7 +1,8 @@
-package com.lgorczynski.shopassist.ui;
+package com.lgorczynski.shopassist.image_managing;
 
 import android.content.Context;
 
+import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 import com.squareup.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
