@@ -61,7 +61,7 @@
     <string name="email_is">Email:</string>
     <string name="username_is">Username:</string>
     <string name="retry">Retry</string>
-    <string name="no_internet_connection">Looks like you don\'t have Internet connection. Please check your Internet connection and retry</string>
+    <string name="no_internet_connection">Looks like you don\'t have Internet connection. Please check your Internet connection and try again</string>
     <string name="no_server_connection">Looks like our server is not running. Please try again later</string>
     <string name="no_loyalty_cards">You don\'t have any loyalty cards yet</string>
     <string name="no_receipts">You don\'t have any receipts yet</string>

@@ -8,6 +8,7 @@ import com.lgorczynski.shopassist.ui.CredentialsSingleton;
 import com.lgorczynski.shopassist.ui.loyalty_cards.LoyaltyCard;
 
 import java.io.IOException;
+import java.net.InetAddress;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -27,26 +28,13 @@ public class ConnectionChecker {
 
     public void checkConnections(){
         try {
-            if(canConnectToInternet()){
-                Log.d(TAG, "onResume: can connect to internet");
-                checkServerConnection();
-            }
-            else{
-                Log.d(TAG, "onResume: cant connect to internet");
-                NoConnectionAlertDialog noConnectionAlertDialog = new NoConnectionAlertDialog(R.string.no_internet_connection, context);
-                noConnectionAlertDialog.getDialog().show();
-            }
+            checkServerConnection();
         }
         catch(Exception e) {
             Log.d(TAG, "onResume: error");
             NoConnectionAlertDialog noConnectionAlertDialog = new NoConnectionAlertDialog(R.string.no_internet_connection, context);
             noConnectionAlertDialog.getDialog().show();
         }
-    }
-
-    private boolean canConnectToInternet() throws IOException, InterruptedException {
-        final String command = "ping -c 1 google.com";
-        return Runtime.getRuntime().exec(command).waitFor() == 0;
     }
 
     private void checkServerConnection(){
@@ -62,7 +50,7 @@ public class ConnectionChecker {
                 if(response.isSuccessful())
                     Log.d(TAG, "onResponse: can connect to server");
                 else{
-                    NoConnectionAlertDialog noConnectionAlertDialog = new NoConnectionAlertDialog(R.string.no_server_connection, context);
+                    NoConnectionAlertDialog noConnectionAlertDialog = new NoConnectionAlertDialog(R.string.no_internet_connection, context);
                     noConnectionAlertDialog.getDialog().show();
                 }
 
@@ -71,7 +59,7 @@ public class ConnectionChecker {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.d(TAG, "onFailure: cant connect to server");
-                NoConnectionAlertDialog noConnectionAlertDialog = new NoConnectionAlertDialog(R.string.no_server_connection, context);
+                NoConnectionAlertDialog noConnectionAlertDialog = new NoConnectionAlertDialog(R.string.no_internet_connection, context);
                 noConnectionAlertDialog.getDialog().show();
             }
         });

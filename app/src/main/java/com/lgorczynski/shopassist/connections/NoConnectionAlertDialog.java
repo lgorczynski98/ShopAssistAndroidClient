@@ -1,5 +1,6 @@
 package com.lgorczynski.shopassist.connections;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 
@@ -22,6 +23,8 @@ public class NoConnectionAlertDialog {
         builder.setMessage(message)
                 .setCancelable(false)
                 .setPositiveButton(R.string.retry, (dialogInterface, i) -> {
+                    Activity activity = (Activity) context;
+                    activity.recreate();
                     connectionChecker.checkConnections();
                 });
         builder.create();

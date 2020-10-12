@@ -68,7 +68,7 @@ public class LoyaltyCardsFragment extends Fragment implements LoyaltyCardRecycle
         //recycler view z kartami lojalnosciowymi
         recyclerView = root.findViewById(R.id.loyalty_cards_recycler_view);
         loyaltyCardsViewModel.getLoyaltyCardsResponseLiveData().observe(this, loyaltyCards -> {
-            if(loyaltyCards.size() == 0)
+            if(loyaltyCards != null && loyaltyCards.size() == 0)
                 noLoyaltyCardsText.setVisibility(View.VISIBLE);
             else
                 noLoyaltyCardsText.setVisibility(View.GONE);
